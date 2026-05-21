@@ -41,4 +41,4 @@ A comprehensive vehicle service management system designed for auto workshops an
 ### 1. Clone the repository
 ```bash
 git clone https://github.com/yourusername/vasma-system.git
-cd vasma-system
+cd vasma-system# vasma
