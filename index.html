@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#155e75" />
+    <title>VASMA System</title>
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="stylesheet" href="styles.css?v=43" />
+    
+    <!-- AUTHENTICATION CHECK - MUST BE FIRST SCRIPT -->
+    <script>
+      (function() {
+        // Check if user is logged in
+        const token = localStorage.getItem('vasma_token');
+        const user = localStorage.getItem('vasma_user');
+        const loginTime = localStorage.getItem('vasma_login_time');
+        
+        // If not logged in, redirect to login page immediately
+        if (!token || !user) {
+          window.location.replace('login.html');
+          return;
+        }
+        
+        // Check if session is expired (8 hours)
+        if (loginTime) {
+          const hoursSinceLogin = (new Date() - new Date(loginTime)) / (1000 * 60 * 60);
+          if (hoursSinceLogin >= 8) {
+            // Clear expired session
+            localStorage.removeItem('vasma_token');
+            localStorage.removeItem('vasma_user');
+            localStorage.removeItem('vasma_login_time');
+            window.location.replace('login.html');
+            return;
+          }
+        }
+        
+        // Optional: Verify user object is valid
+        try {
+          const userData = JSON.parse(user);
+          if (!userData.id || !userData.username) {
+            throw new Error('Invalid user data');
+          }
+        } catch (e) {
+          localStorage.clear();
+          window.location.replace('login.html');
+          return;
+        }
+        
+        // Store user data globally for use in app
+        window.currentUser = JSON.parse(user);
+      })();
+    </script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside id="sidebar" class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">V</div>
+          <div>
+            <strong id="brandBusinessName">VASMA</strong>
+            <span id="brandAppName">System</span>
+          </div>
+        </div>
+        <nav class="nav" aria-label="Main navigation">
+          <button class="nav-item active" data-view="dashboard">Dashboard</button>
+          <button class="nav-item" data-view="customers">Customers</button>
+          <button class="nav-item" data-view="jobs">Job Cards</button>
+          <button class="nav-item" data-view="confirmation">Work Confirmation</button>
+          <button class="nav-item" data-view="serviceCards">Service Cards</button>
+          <button class="nav-item" data-view="payments">Payments</button>
+          <button class="nav-item" data-view="expenses">Expenses</button>
+          <button class="nav-item" data-view="commissions">Commissions</button>
+          <button class="nav-item" data-view="admin">Admin Edit</button>
+          <button class="nav-item" data-view="master">Master Data</button>
+          <button class="nav-item" data-view="reports">Reports</button>
+          <button class="nav-item" data-view="analysis">Analysis</button>
+          <button class="nav-item" data-view="license">License</button>
+          <button class="nav-item" data-view="security">Security</button>
+          <button class="nav-item" data-view="settings">Settings</button>
+        </nav>
+      </aside>
+
+      <main class="workspace">
+        <header class="topbar">
+          <button id="menuToggle" class="menu-toggle" type="button" aria-label="Open menu" aria-controls="sidebar" aria-expanded="false">
+            <span></span><span></span><span></span>
+          </button>
+          <div>
+            <div id="dashboardTopNames" class="dashboard-top-names" hidden></div>
+            <h1 id="viewTitle">Dashboard</h1>
+          </div>
+          <div class="top-actions">
+            <!-- Add user info and logout button in topbar for mobile -->
+            <div class="top-user-info" id="topUserInfo">
+              <span class="top-user-name" id="topUserName"></span>
+              <button onclick="logout()" class="top-logout-btn" title="Logout">🚪</button>
+            </div>
+          </div>
+        </header>
+
+        <section id="dashboard" class="view active"></section>
+        <section id="customers" class="view"></section>
+        <section id="jobs" class="view"></section>
+        <section id="confirmation" class="view"></section>
+        <section id="serviceCards" class="view"></section>
+        <section id="payments" class="view"></section>
+        <section id="expenses" class="view"></section>
+        <section id="commissions" class="view"></section>
+        <section id="admin" class="view"></section>
+        <section id="master" class="view"></section>
+        <section id="reports" class="view"></section>
+        <section id="analysis" class="view"></section>
+        <section id="license" class="view"></section>
+        <section id="security" class="view"></section>
+        <section id="settings" class="view"></section>
+      </main>
+    </div>
+    <div id="sidebarOverlay" class="sidebar-overlay" hidden></div>
+    <div id="securityLock" class="security-lock" hidden>
+      <form id="securityUnlockForm" class="security-lock-card">
+        <div class="brand-mark">V</div>
+        <h2>VASMA System Locked</h2>
+        <p class="muted">Enter your password or PIN to continue.</p>
+        <label>Password / PIN<input id="securityUnlockPassword" type="password" autocomplete="current-password" required></label>
+        <button class="primary">Unlock App</button>
+        <p id="securityUnlockError" class="security-error" aria-live="polite"></p>
+      </form>
+    </div>
+
+    <dialog id="modal">
+      <form method="dialog">
+        <button class="icon close-modal" value="cancel" aria-label="Close">x</button>
+      </form>
+      <div id="modalBody"></div>
+    </dialog>
+
+    <div id="toast" role="status" aria-live="polite"></div>
+    <button id="backDashboard" class="back-dashboard" type="button" aria-label="Back to dashboard">Dashboard</button>
+    
+    <!-- Scripts -->
+    <script src="logout.js"></script>
+    <script src="app.js?v=43"></script>
+    
+    <!-- Additional script to display user info -->
+    <script>
+      (function displayUserInfo() {
+        try {
+          const userData = window.currentUser || JSON.parse(localStorage.getItem('vasma_user') || '{}');
+          const userName = userData.name || userData.username || 'User';
+          const userRole = userData.role || 'staff';
+          
+          // Update sidebar user info
+          const sidebarUserName = document.getElementById('sidebarUserName');
+          const sidebarUserRole = document.getElementById('sidebarUserRole');
+          const topUserName = document.getElementById('topUserName');
+          
+          if (sidebarUserName) sidebarUserName.textContent = userName;
+          if (sidebarUserRole) sidebarUserRole.textContent = userRole.charAt(0).toUpperCase() + userRole.slice(1);
+          if (topUserName) topUserName.textContent = userName;
+          
+          // Update brand business name if available from settings
+          if (userData.businessName) {
+            const brandBusinessName = document.getElementById('brandBusinessName');
+            if (brandBusinessName) brandBusinessName.textContent = userData.businessName;
+          }
+        } catch (e) {
+          console.error('Error displaying user info:', e);
+        }
+      })();
+    </script>
+    
+    <style>
+      /* Additional styles for authentication UI */
+      .sidebar-footer {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 20px 16px;
+        border-top: 1px solid rgba(255,255,255,0.1);
+        background: rgba(0,0,0,0.2);
+      }
+      
+      .user-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 15px;
+        padding: 8px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 12px;
+      }
+      
+      .user-avatar {
+        font-size: 32px;
+      }
+      
+      .user-details {
+        display: flex;
+        flex-direction: column;
+      }
+      
+      .user-name {
+        font-weight: 600;
+        font-size: 14px;
+        color: white;
+      }
+      
+      .user-role {
+        font-size: 12px;
+        color: rgba(255,255,255,0.7);
+      }
+      
+      .logout-sidebar-btn {
+        width: 100%;
+        padding: 10px;
+        background: rgba(220, 53, 69, 0.9);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: all 0.3s;
+      }
+      
+      .logout-sidebar-btn:hover {
+        background: #dc3545;
+        transform: translateY(-2px);
+      }
+      
+      .top-user-info {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+      
+      .top-user-name {
+        font-size: 14px;
+        color: #333;
+        font-weight: 500;
+      }
+      
+      .top-logout-btn {
+        background: #dc3545;
+        color: white;
+        border: none;
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+      }
+      
+      .top-logout-btn:hover {
+        background: #c82333;
+        transform: scale(1.05);
+      }
+      
+      /* Mobile adjustments */
+      @media (max-width: 768px) {
+        .sidebar-footer {
+          padding: 15px 12px;
+        }
+        
+        .user-info {
+          padding: 6px;
+        }
+        
+        .user-avatar {
+          font-size: 28px;
+        }
+        
+        .top-user-name {
+          display: none;
+        }
+      }
+    </style>
+  </body>
+</html>
