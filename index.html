@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#155e75" />
     <title>VASMA System</title>
     <link rel="manifest" href="manifest.webmanifest" />
-    <link rel="stylesheet" href="styles.css?v=43" />
+    <link rel="stylesheet" href="styles.css?v=44" />
     
     <!-- AUTHENTICATION CHECK - MUST BE FIRST SCRIPT -->
     <script>
@@ -62,6 +62,7 @@
             <span id="brandAppName">System</span>
           </div>
         </div>
+        
         <nav class="nav" aria-label="Main navigation">
           <button class="nav-item active" data-view="dashboard">Dashboard</button>
           <button class="nav-item" data-view="customers">Customers</button>
@@ -72,12 +73,59 @@
           <button class="nav-item" data-view="expenses">Expenses</button>
           <button class="nav-item" data-view="commissions">Commissions</button>
           <button class="nav-item" data-view="admin">Admin Edit</button>
-          <button class="nav-item" data-view="master">Master Data</button>
-          <button class="nav-item" data-view="reports">Reports</button>
-          <button class="nav-item" data-view="analysis">Analysis</button>
-          <button class="nav-item" data-view="license">License</button>
-          <button class="nav-item" data-view="security">Security</button>
-          <button class="nav-item" data-view="settings">Settings</button>
+          
+          <!-- Master Data Dropdown - Hover (No Arrow) -->
+          <div class="nav-dropdown">
+            <button class="nav-dropdown-btn">
+              <span>Master Data</span>
+            </button>
+            <div class="nav-dropdown-content">
+              <button class="nav-dropdown-item" data-view="employees">Employee List</button>
+              <button class="nav-dropdown-item" data-view="serviceCategories">Service Category</button>
+              <button class="nav-dropdown-item" data-view="serviceItems">Service Items</button>
+              <button class="nav-dropdown-item" data-view="packages">Packages</button>
+            </div>
+          </div>
+          
+          <!-- Reports Dropdown - Hover (No Arrow) -->
+          <div class="nav-dropdown">
+            <button class="nav-dropdown-btn">
+              <span>Reports</span>
+            </button>
+            <div class="nav-dropdown-content">
+              <button class="nav-dropdown-item" data-view="outstandingReport">Outstanding Report</button>
+              <button class="nav-dropdown-item" data-view="incomeStatement">Income Statement</button>
+              <button class="nav-dropdown-item" data-view="upcomingReport">Upcoming Report</button>
+            </div>
+          </div>
+          
+          <!-- Analysis Dropdown - Hover (No Arrow) -->
+          <div class="nav-dropdown">
+            <button class="nav-dropdown-btn">
+              <span>Analysis</span>
+            </button>
+            <div class="nav-dropdown-content">
+              <button class="nav-dropdown-item" data-view="currentView">Current View</button>
+              <button class="nav-dropdown-item" data-view="barChart">Bar Chart</button>
+              <button class="nav-dropdown-item" data-view="pieChart">Pie Chart</button>
+              <button class="nav-dropdown-item" data-view="graph">Graph</button>
+            </div>
+          </div>
+          
+          <!-- Settings Dropdown - Hover (No Arrow) -->
+          <div class="nav-dropdown">
+            <button class="nav-dropdown-btn">
+              <span>Settings</span>
+            </button>
+            <div class="nav-dropdown-content">
+              <button class="nav-dropdown-item" data-view="businessSetup">Business Setup</button>
+              <button class="nav-dropdown-item" data-view="userProfile">User Profile</button>
+              <button class="nav-dropdown-item" data-view="theme">Theme</button>
+              <button class="nav-dropdown-item" data-view="language">Language</button>
+              <button class="nav-dropdown-item" data-view="appTools">App Tools</button>
+              <button class="nav-dropdown-item" data-view="aboutApp">About the App</button>
+            </div>
+          </div>
         </nav>
       </aside>
 
@@ -91,10 +139,9 @@
             <h1 id="viewTitle">Dashboard</h1>
           </div>
           <div class="top-actions">
-            <!-- Add user info and logout button in topbar for mobile -->
+            <!-- User info in topbar - Logout Button Removed -->
             <div class="top-user-info" id="topUserInfo">
               <span class="top-user-name" id="topUserName"></span>
-              <button onclick="logout()" class="top-logout-btn" title="Logout">🚪</button>
             </div>
           </div>
         </header>
@@ -108,9 +155,32 @@
         <section id="expenses" class="view"></section>
         <section id="commissions" class="view"></section>
         <section id="admin" class="view"></section>
-        <section id="master" class="view"></section>
-        <section id="reports" class="view"></section>
-        <section id="analysis" class="view"></section>
+        
+        <!-- Master Data Views -->
+        <section id="employees" class="view"></section>
+        <section id="serviceCategories" class="view"></section>
+        <section id="serviceItems" class="view"></section>
+        <section id="packages" class="view"></section>
+        
+        <!-- Reports Views -->
+        <section id="outstandingReport" class="view"></section>
+        <section id="incomeStatement" class="view"></section>
+        <section id="upcomingReport" class="view"></section>
+        
+        <!-- Analysis Views -->
+        <section id="currentView" class="view"></section>
+        <section id="barChart" class="view"></section>
+        <section id="pieChart" class="view"></section>
+        <section id="graph" class="view"></section>
+        
+        <!-- Settings Views -->
+        <section id="businessSetup" class="view"></section>
+        <section id="userProfile" class="view"></section>
+        <section id="theme" class="view"></section>
+        <section id="language" class="view"></section>
+        <section id="appTools" class="view"></section>
+        <section id="aboutApp" class="view"></section>
+        
         <section id="license" class="view"></section>
         <section id="security" class="view"></section>
         <section id="settings" class="view"></section>
@@ -140,9 +210,301 @@
     
     <!-- Scripts -->
     <script src="logout.js"></script>
-    <script src="app.js?v=43"></script>
+    <script src="app.js?v=44"></script>
     
-    <!-- Additional script to display user info -->
+    <!-- Hover Dropdown Menu JavaScript (No Arrow Version) -->
+    <script>
+      (function() {
+        // Add hover functionality to all dropdowns
+        const dropdowns = document.querySelectorAll('.nav-dropdown');
+        
+        let hoverTimeout;
+        
+        dropdowns.forEach(dropdown => {
+          const btn = dropdown.querySelector('.nav-dropdown-btn');
+          const menu = dropdown.querySelector('.nav-dropdown-content');
+          
+          if (!btn || !menu) return;
+          
+          // Handle mouse enter on dropdown container
+          dropdown.addEventListener('mouseenter', function() {
+            clearTimeout(hoverTimeout);
+            // Close all other dropdowns first
+            dropdowns.forEach(d => {
+              if (d !== dropdown) {
+                const otherMenu = d.querySelector('.nav-dropdown-content');
+                const otherBtn = d.querySelector('.nav-dropdown-btn');
+                if (otherMenu) otherMenu.classList.remove('show');
+                if (otherBtn) otherBtn.classList.remove('active');
+              }
+            });
+            // Open current dropdown
+            menu.classList.add('show');
+            btn.classList.add('active');
+          });
+          
+          // Handle mouse leave on dropdown container
+          dropdown.addEventListener('mouseleave', function() {
+            hoverTimeout = setTimeout(() => {
+              menu.classList.remove('show');
+              btn.classList.remove('active');
+            }, 200);
+          });
+          
+          // Keep menu open when hovering over the menu itself
+          menu.addEventListener('mouseenter', function() {
+            clearTimeout(hoverTimeout);
+          });
+          
+          menu.addEventListener('mouseleave', function() {
+            menu.classList.remove('show');
+            btn.classList.remove('active');
+          });
+        });
+        
+        // Handle dropdown item clicks
+        document.querySelectorAll('.nav-dropdown-item').forEach(item => {
+          item.addEventListener('click', function(e) {
+            e.stopPropagation();
+            
+            const viewName = this.getAttribute('data-view');
+            if (viewName) {
+              // Close all dropdowns
+              document.querySelectorAll('.nav-dropdown-content').forEach(menu => {
+                menu.classList.remove('show');
+              });
+              document.querySelectorAll('.nav-dropdown-btn').forEach(btn => {
+                btn.classList.remove('active');
+              });
+              
+              // Trigger view change
+              if (typeof window.switchView === 'function') {
+                window.switchView(viewName);
+              } else {
+                // Dispatch custom event for app.js to handle
+                const event = new CustomEvent('viewChange', { detail: { view: viewName } });
+                document.dispatchEvent(event);
+              }
+            }
+          });
+        });
+        
+        // For mobile devices - fallback to click on touch devices
+        if ('ontouchstart' in window) {
+          dropdowns.forEach(dropdown => {
+            const btn = dropdown.querySelector('.nav-dropdown-btn');
+            const menu = dropdown.querySelector('.nav-dropdown-content');
+            
+            if (!btn || !menu) return;
+            
+            btn.addEventListener('click', function(e) {
+              e.stopPropagation();
+              e.preventDefault();
+              
+              const isOpen = menu.classList.contains('show');
+              
+              // Close all dropdowns
+              dropdowns.forEach(d => {
+                const m = d.querySelector('.nav-dropdown-content');
+                const b = d.querySelector('.nav-dropdown-btn');
+                if (m && m !== menu) m.classList.remove('show');
+                if (b) b.classList.remove('active');
+              });
+              
+              if (!isOpen) {
+                menu.classList.add('show');
+                btn.classList.add('active');
+              } else {
+                menu.classList.remove('show');
+                btn.classList.remove('active');
+              }
+            });
+          });
+        }
+        
+        console.log('Hover dropdown menu initialized (no arrows)');
+      })();
+    </script>
+    
+    <style>
+      /* Dropdown Styles - Hover Version (No Arrows) */
+      .nav-dropdown {
+        position: relative;
+        width: 100%;
+      }
+      
+      .nav-dropdown-btn {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 16px;
+        background: none;
+        border: none;
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-align: left;
+        font-weight: 500;
+      }
+      
+      .nav-dropdown-btn:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+      }
+      
+      .nav-dropdown-btn.active {
+        background: rgba(255, 255, 255, 0.15);
+        color: white;
+      }
+      
+      .nav-dropdown-content {
+        display: none;
+        background: rgba(0, 0, 0, 0.4);
+        border-radius: 8px;
+        margin: 4px 8px 8px 8px;
+        padding: 4px 0;
+        max-height: 300px;
+        overflow-y: auto;
+        backdrop-filter: blur(10px);
+      }
+      
+      .nav-dropdown-content.show {
+        display: block;
+        animation: slideDown 0.2s ease;
+      }
+      
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-5px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      
+      .nav-dropdown-item {
+        width: 100%;
+        padding: 10px 16px 10px 32px;
+        background: none;
+        border: none;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 13px;
+        cursor: pointer;
+        text-align: left;
+        transition: all 0.2s;
+      }
+      
+      .nav-dropdown-item:hover {
+        background: rgba(255, 255, 255, 0.15);
+        color: white;
+        padding-left: 40px;
+      }
+      
+      /* Sidebar Footer - Logout Button Removed */
+      .sidebar-footer {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 20px 16px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(0, 0, 0, 0.2);
+      }
+      
+      .user-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 0;
+        padding: 8px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+      }
+      
+      .user-avatar {
+        font-size: 32px;
+      }
+      
+      .user-details {
+        display: flex;
+        flex-direction: column;
+      }
+      
+      .user-name {
+        font-weight: 600;
+        font-size: 14px;
+        color: white;
+      }
+      
+      .user-role {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.7);
+      }
+      
+      .top-user-info {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+      
+      .top-user-name {
+        font-size: 14px;
+        color: #333;
+        font-weight: 500;
+      }
+      
+      /* Mobile adjustments */
+      @media (max-width: 768px) {
+        .sidebar-footer {
+          padding: 15px 12px;
+        }
+        
+        .user-info {
+          padding: 6px;
+        }
+        
+        .user-avatar {
+          font-size: 28px;
+        }
+        
+        .top-user-name {
+          font-size: 12px;
+        }
+        
+        .nav-dropdown-item {
+          padding: 8px 16px 8px 28px;
+          font-size: 12px;
+        }
+        
+        .nav-dropdown-item:hover {
+          padding-left: 32px;
+        }
+        
+        /* On mobile, larger tap targets */
+        .nav-dropdown-btn {
+          padding: 14px 16px;
+        }
+      }
+      
+      /* Sidebar scroll adjustment */
+      .sidebar {
+        overflow-y: auto;
+        padding-bottom: 100px;
+      }
+      
+      /* Smooth transitions */
+      .nav-dropdown-content,
+      .nav-dropdown-btn,
+      .nav-dropdown-item {
+        transition: all 0.2s ease;
+      }
+    </style>
+    
+    <!-- Display user info script -->
     <script>
       (function displayUserInfo() {
         try {
@@ -169,121 +531,5 @@
         }
       })();
     </script>
-    
-    <style>
-      /* Additional styles for authentication UI */
-      .sidebar-footer {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        padding: 20px 16px;
-        border-top: 1px solid rgba(255,255,255,0.1);
-        background: rgba(0,0,0,0.2);
-      }
-      
-      .user-info {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        margin-bottom: 15px;
-        padding: 8px;
-        background: rgba(255,255,255,0.1);
-        border-radius: 12px;
-      }
-      
-      .user-avatar {
-        font-size: 32px;
-      }
-      
-      .user-details {
-        display: flex;
-        flex-direction: column;
-      }
-      
-      .user-name {
-        font-weight: 600;
-        font-size: 14px;
-        color: white;
-      }
-      
-      .user-role {
-        font-size: 12px;
-        color: rgba(255,255,255,0.7);
-      }
-      
-      .logout-sidebar-btn {
-        width: 100%;
-        padding: 10px;
-        background: rgba(220, 53, 69, 0.9);
-        color: white;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 14px;
-        font-weight: 500;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        transition: all 0.3s;
-      }
-      
-      .logout-sidebar-btn:hover {
-        background: #dc3545;
-        transform: translateY(-2px);
-      }
-      
-      .top-user-info {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-      }
-      
-      .top-user-name {
-        font-size: 14px;
-        color: #333;
-        font-weight: 500;
-      }
-      
-      .top-logout-btn {
-        background: #dc3545;
-        color: white;
-        border: none;
-        width: 36px;
-        height: 36px;
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 18px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.3s;
-      }
-      
-      .top-logout-btn:hover {
-        background: #c82333;
-        transform: scale(1.05);
-      }
-      
-      /* Mobile adjustments */
-      @media (max-width: 768px) {
-        .sidebar-footer {
-          padding: 15px 12px;
-        }
-        
-        .user-info {
-          padding: 6px;
-        }
-        
-        .user-avatar {
-          font-size: 28px;
-        }
-        
-        .top-user-name {
-          display: none;
-        }
-      }
-    </style>
   </body>
 </html>
