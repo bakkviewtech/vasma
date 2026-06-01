@@ -575,3 +575,162 @@ tbody tr:hover td { background: #fbfdff; }
     grid-template-columns: repeat(3, minmax(160px, 1fr));
   }
 }
+
+/* AdminLTE local integration. Keep VASMA data views, but let AdminLTE own the shell. */
+body.adminlte-vasma {
+  display: block;
+  min-height: 100vh;
+  color: var(--ink);
+  background: #f4f6f9;
+}
+
+.adminlte-vasma .wrapper {
+  min-height: 100vh;
+}
+
+.adminlte-vasma .admin-sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  width: 280px;
+  height: 100vh;
+  min-height: 100vh;
+  max-height: none;
+  padding: 0;
+  overflow-y: auto;
+  background: linear-gradient(180deg, var(--navy) 0%, var(--navy-2) 100%);
+}
+
+.adminlte-vasma .brand {
+  margin: 0;
+  padding: 14px 16px;
+  gap: 12px;
+  border-bottom: 1px solid rgba(255,255,255,.15);
+  color: #fff;
+}
+
+.adminlte-vasma .brand:hover {
+  color: #fff;
+}
+
+.adminlte-vasma .brand-mark {
+  flex: 0 0 42px;
+  margin: 0;
+}
+
+.adminlte-vasma .brand-text {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.adminlte-vasma .brand-text small {
+  color: #b9d9ef;
+  font-size: 13px;
+}
+
+.adminlte-vasma .sidebar {
+  height: auto;
+  padding: 18px 12px;
+}
+
+.adminlte-vasma .nav-sidebar {
+  display: grid;
+  gap: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.adminlte-vasma .nav-item {
+  list-style: none;
+}
+
+.adminlte-vasma .nav.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: #eaf6ff;
+  text-align: left;
+  padding: 13px 14px;
+  border-radius: 8px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.adminlte-vasma .nav.nav-link.active,
+.adminlte-vasma .nav.nav-link:hover {
+  background: var(--blue);
+  color: #fff;
+}
+
+.adminlte-vasma .content-wrapper {
+  margin-left: 280px;
+  min-height: 100vh;
+  padding: 0;
+  background: #f4f6f9;
+  overflow-x: hidden;
+}
+
+.adminlte-vasma .main-header {
+  min-height: auto;
+  padding: 18px 28px;
+  margin: 0 0 22px;
+  border-bottom: 1px solid var(--line);
+  background: #fff;
+}
+
+.adminlte-vasma .content-header {
+  padding: 0 28px;
+}
+
+.adminlte-vasma .content {
+  padding: 0 28px 28px;
+}
+
+.adminlte-vasma .menu-toggle {
+  display: none;
+}
+
+.adminlte-vasma .card,
+.adminlte-vasma .panel {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+.adminlte-vasma.sidebar-collapse .admin-sidebar {
+  transform: translateX(-100%);
+}
+
+.adminlte-vasma.sidebar-collapse .content-wrapper {
+  margin-left: 0;
+}
+
+@media (max-width: 900px) {
+  .adminlte-vasma .admin-sidebar {
+    transform: translateX(-100%);
+    transition: transform .18s ease;
+    z-index: 1050;
+  }
+
+  .adminlte-vasma.sidebar-open .admin-sidebar {
+    transform: translateX(0);
+  }
+
+  .adminlte-vasma .content-wrapper {
+    margin-left: 0;
+  }
+
+  .adminlte-vasma .menu-toggle {
+    display: inline-flex;
+  }
+
+  .adminlte-vasma .main-header,
+  .adminlte-vasma .content-header,
+  .adminlte-vasma .content {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+}

@@ -1,4 +1,4 @@
-const CACHE_NAME = "vasma-pwa-v107";
+const CACHE_NAME = "vasma-pwa-v108";
 const ASSETS = [
   "./",
   "./index.html",
@@ -8,6 +8,8 @@ const ASSETS = [
   "./landing/index.html",
   "./styles.css?v=107",
   "./app.js?v=107",
+  "./vendor/adminlte/css/adminlte.min.css",
+  "./vendor/adminlte/js/adminlte.min.js",
   "./manifest.webmanifest",
   "./icon.svg"
 ];

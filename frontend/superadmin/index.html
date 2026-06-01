@@ -5,44 +5,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>VASMA Admin Panel</title>
     <link rel="icon" type="image/svg+xml" href="../icon.svg" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" onerror="this.onerror=null;this.href='../vendor/adminlte/plugins/fontawesome-free/css/all.min.css';" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0/dist/css/adminlte.min.css" onerror="this.onerror=null;this.href='../vendor/adminlte/css/adminlte.min.css';" />
     <link rel="stylesheet" href="./superadmin.css" />
   </head>
-  <body>
-    <aside class="admin-sidebar">
-      <div class="brand">
-        <div class="brand-mark"><img src="../icon.svg" alt="" /></div>
-        <div>
-          <strong>VASMA</strong>
-          <span>Admin Panel</span>
+  <body class="hold-transition sidebar-mini layout-fixed adminlte-vasma">
+    <div class="wrapper">
+      <aside class="admin-sidebar main-sidebar sidebar-dark-primary elevation-4">
+        <a href="./" class="brand brand-link">
+          <span class="brand-mark"><img src="../icon.svg" alt="" class="brand-image" /></span>
+          <span class="brand-text"><strong>VASMA</strong><small>Admin Panel</small></span>
+        </a>
+        <div class="sidebar">
+          <nav>
+            <ul class="nav-sidebar flex-column" data-widget="treeview" role="menu">
+              <li class="nav-item"><button class="nav nav-link active" data-view="overview"><i class="nav-icon fas fa-tachometer-alt"></i><span>Overview</span></button></li>
+              <li class="nav-item"><button class="nav nav-link" data-view="packages"><i class="nav-icon fas fa-box"></i><span>Manage Packages</span></button></li>
+              <li class="nav-item"><button class="nav nav-link" data-view="subscriptions"><i class="nav-icon fas fa-users"></i><span>Manage Subscriptions</span></button></li>
+              <li class="nav-item"><button class="nav nav-link" data-view="businesses"><i class="nav-icon fas fa-building"></i><span>Registered Businesses</span></button></li>
+              <li class="nav-item"><button class="nav nav-link" data-view="reports"><i class="nav-icon fas fa-chart-bar"></i><span>Reports</span></button></li>
+              <li class="nav-item"><button class="nav nav-link" data-view="landing"><i class="nav-icon fas fa-file-alt"></i><span>Landing Pages</span></button></li>
+              <li class="nav-item"><button class="nav nav-link" data-view="payments"><i class="nav-icon fas fa-credit-card"></i><span>Payment Methods</span></button></li>
+            </ul>
+          </nav>
         </div>
-      </div>
-      <nav>
-        <button class="nav active" data-view="overview">Overview</button>
-        <button class="nav" data-view="packages">Manage Packages</button>
-        <button class="nav" data-view="subscriptions">Manage Subscriptions</button>
-        <button class="nav" data-view="businesses">Registered Businesses</button>
-        <button class="nav" data-view="reports">Reports</button>
-        <button class="nav" data-view="landing">Landing Pages</button>
-        <button class="nav" data-view="payments">Payment Methods</button>
-      </nav>
-    </aside>
+      </aside>
 
-    <main class="admin-main">
-      <header class="topbar">
-        <div>
-          <p>System owner workspace</p>
-          <h1 id="pageTitle">Overview</h1>
-        </div>
-        <div class="top-actions">
-          <a href="../index.html">Business App</a>
-          <button id="logoutBtn" title="Logout">⏻</button>
-        </div>
-      </header>
+      <main class="admin-main content-wrapper">
+        <nav class="topbar main-header navbar navbar-expand navbar-white navbar-light">
+          <button class="btn btn-secondary menu-toggle" data-widget="pushmenu" type="button"><i class="fas fa-bars"></i></button>
+          <div>
+            <p>System owner workspace</p>
+            <h1 id="pageTitle">Overview</h1>
+          </div>
+          <div class="top-actions">
+            <a href="../index.html">Business App</a>
+            <button id="logoutBtn" title="Logout"><i class="fas fa-sign-out-alt"></i></button>
+          </div>
+        </nav>
 
-      <section id="message" class="message" hidden></section>
-      <section id="content"></section>
-    </main>
+        <section class="content-header">
+          <section id="message" class="message alert alert-info" hidden></section>
+        </section>
+        <section class="content">
+          <section id="content" class="container-fluid"></section>
+        </section>
+      </main>
+    </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" onerror="this.onerror=null;this.src='../vendor/adminlte/plugins/jquery/jquery.min.js';"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" onerror="this.onerror=null;this.src='../vendor/adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js';"></script>
+    <script src="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0/dist/js/adminlte.min.js" onerror="this.onerror=null;this.src='../vendor/adminlte/js/adminlte.min.js';"></script>
     <script src="./superadmin.js"></script>
   </body>
 </html>

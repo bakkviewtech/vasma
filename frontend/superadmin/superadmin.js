@@ -845,4 +845,14 @@ document.querySelector("#logoutBtn").addEventListener("click", () => {
   location.replace("../admin-login.html");
 });
 
+document.querySelector(".menu-toggle")?.addEventListener("click", () => {
+  document.body.classList.toggle(window.innerWidth <= 900 ? "sidebar-open" : "sidebar-collapse");
+});
+
+document.addEventListener("click", (event) => {
+  if (window.innerWidth > 900 || !document.body.classList.contains("sidebar-open")) return;
+  if (event.target.closest(".admin-sidebar") || event.target.closest(".menu-toggle")) return;
+  document.body.classList.remove("sidebar-open");
+});
+
 renderOverview().catch((error) => showMessage(error.message, true));
