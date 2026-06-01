@@ -1,0 +1,16 @@
+{
+  "name": "Vehicle Auto Service Management System",
+  "short_name": "VASMA System",
+  "description": "Vehicle auto service management for job cards, payments, commissions, expenses, reports, and analysis.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#155e75",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

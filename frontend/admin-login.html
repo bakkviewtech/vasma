@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login - VASMA System</title>
+  <link rel="stylesheet" href="styles.css?v=100">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #022b4f 0%, #064067 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .login-container {
+      width: 100%;
+      max-width: 430px;
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.32);
+      padding: 38px;
+    }
+    .login-header { text-align: center; margin-bottom: 28px; }
+    .brand-mark {
+      width: 68px;
+      height: 68px;
+      margin: 0 auto 18px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #1e9af0;
+      color: #fff;
+      font-size: 32px;
+      font-weight: 800;
+    }
+    h2 { color: #022b4f; margin-bottom: 8px; }
+    .login-header p { color: #64748b; }
+    .form-group { margin-bottom: 18px; }
+    label { display: block; margin-bottom: 8px; color: #0f172a; font-weight: 700; }
+    input {
+      width: 100%;
+      border: 2px solid #dbe3eb;
+      border-radius: 10px;
+      padding: 13px 15px;
+      font-size: 16px;
+    }
+    input:focus {
+      outline: none;
+      border-color: #1e9af0;
+      box-shadow: 0 0 0 3px rgba(30,154,240,.16);
+    }
+    .login-btn {
+      width: 100%;
+      padding: 14px;
+      border: 0;
+      border-radius: 10px;
+      background: #022b4f;
+      color: #fff;
+      font-weight: 800;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .login-btn:disabled { opacity: .65; cursor: wait; }
+    .error-message {
+      display: none;
+      margin-bottom: 18px;
+      padding: 12px;
+      border-radius: 10px;
+      color: #b91c1c;
+      background: #fee2e2;
+      border-left: 4px solid #dc2626;
+      text-align: center;
+    }
+    .links {
+      margin-top: 20px;
+      padding-top: 18px;
+      border-top: 1px solid #e2e8f0;
+      text-align: center;
+      font-size: 14px;
+    }
+    .links a { color: #0369a1; font-weight: 700; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-header">
+      <div class="brand-mark">A</div>
+      <h2>VASMA Admin</h2>
+      <p>System administration access</p>
+    </div>
+
+    <div id="errorMessage" class="error-message"></div>
+
+    <form id="loginForm">
+      <div class="form-group">
+        <label>Admin Username</label>
+        <input type="text" id="username" autocomplete="username" value="admin" required>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="password" autocomplete="current-password" placeholder="Enter admin password" required>
+      </div>
+      <button type="submit" class="login-btn">Login as Admin</button>
+    </form>
+
+    <div class="links">
+      User login: <a href="login.html">Open business login</a>
+    </div>
+  </div>
+
+  <script>
+    const configuredApiUrl = window.VASMA_API_URL || localStorage.getItem('vasma_api_url') || '';
+    const API_CANDIDATES = [
+      configuredApiUrl,
+      location.port === '3000' ? '' : 'http://localhost:3000',
+      'http://127.0.0.1:3000'
+    ].filter((value, index, list) => list.indexOf(value) === index);
+    const form = document.getElementById('loginForm');
+    const errorDiv = document.getElementById('errorMessage');
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+
+    function showMessage(message, ok = false) {
+      errorDiv.textContent = message;
+      errorDiv.style.display = 'block';
+      errorDiv.style.background = ok ? '#dcfce7' : '#fee2e2';
+      errorDiv.style.color = ok ? '#166534' : '#b91c1c';
+      errorDiv.style.borderLeftColor = ok ? '#22c55e' : '#dc2626';
+    }
+
+    async function adminLogin(username, password) {
+      let lastError;
+      for (const apiUrl of API_CANDIDATES) {
+        try {
+          const response = await fetch(`${apiUrl}/api/auth/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
+          });
+          const data = await response.json().catch(() => ({}));
+          return { response, data };
+        } catch (error) {
+          lastError = error;
+        }
+      }
+      throw new Error('Cannot reach the VASMA server. Open http://localhost:3000/admin-login.html and make sure the server is running.');
+    }
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const username = usernameInput.value.trim();
+      const password = passwordInput.value;
+      if (!username || !password) return showMessage('Enter admin username and password');
+
+      const button = form.querySelector('button');
+      const original = button.textContent;
+      button.textContent = 'Logging in...';
+      button.disabled = true;
+      try {
+        const { response, data } = await adminLogin(username, password);
+        if (!response.ok || !data.success || data.role !== 'admin') {
+          throw new Error(data.error || 'Invalid admin credentials');
+        }
+        localStorage.setItem('vasma_token', data.token);
+        localStorage.setItem('vasma_user', JSON.stringify(data.user));
+        localStorage.setItem('vasma_login_time', new Date().toISOString());
+        localStorage.removeItem('vasma_business_session');
+        localStorage.removeItem('vasma-developer-mode');
+        showMessage('Admin login successful. Redirecting...', true);
+        setTimeout(() => window.location.replace('superadmin/'), 400);
+      } catch (error) {
+        showMessage(error.message || 'Admin login failed');
+      } finally {
+        button.textContent = original;
+        button.disabled = false;
+      }
+    });
+
+    passwordInput.focus();
+  </script>
+</body>
+</html>

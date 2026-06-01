@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VASMA Admin License Generator</title>
+    <style>
+      :root {
+        --bg: #f8fafc;
+        --panel: #ffffff;
+        --ink: #0f172a;
+        --muted: #64748b;
+        --line: #dbe3ea;
+        --brand: #155e75;
+        --accent: #f59e0b;
+        --bad: #b91c1c;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+      * { box-sizing: border-box; }
+      body { margin: 0; background: var(--bg); color: var(--ink); }
+      main { width: min(1180px, 100%); margin: 0 auto; padding: 22px; }
+      h1, h2, h3, p { margin-top: 0; }
+      .brand { display: flex; gap: 12px; align-items: center; margin-bottom: 18px; }
+      .mark { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 8px; background: var(--accent); font-weight: 900; font-size: 26px; }
+      .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px; box-shadow: 0 18px 50px rgba(15, 23, 42, 0.08); }
+      .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+      .stack { display: grid; gap: 12px; }
+      label { display: grid; gap: 6px; color: #334155; font-size: 13px; font-weight: 800; }
+      input, select, textarea, button { font: inherit; }
+      input, select, textarea { width: 100%; border: 1px solid #cbd5e1; border-radius: 7px; padding: 10px 11px; color: var(--ink); background: var(--panel); }
+      textarea { min-height: 130px; resize: vertical; }
+      button { min-height: 42px; border: 1px solid transparent; border-radius: 8px; padding: 10px 13px; font-weight: 900; cursor: pointer; }
+      .primary { background: var(--brand); color: #fff; }
+      .secondary { background: #fff; color: var(--brand); border-color: #bdd7df; }
+      .muted { color: var(--muted); }
+      .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+      table { width: 100%; border-collapse: collapse; }
+      th, td { padding: 10px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+      th { background: var(--bg); font-size: 12px; text-transform: uppercase; }
+      .warning { border-color: #fbbf24; background: #fffbeb; color: #92400e; font-weight: 800; }
+      @media (max-width: 760px) {
+        main { padding: 14px; }
+        .grid { grid-template-columns: 1fr; }
+        .actions > button { width: 100%; }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="brand">
+        <div class="mark">V</div>
+        <div>
+          <h1>VASMA Admin License Generator</h1>
+          <p class="muted">Keep this file with Admin only. It contains private activation keys.</p>
+        </div>
+      </div>
+      <div class="panel warning" style="margin-bottom:14px">Do not share this Admin file with normal users. Use it to decode Request Codes and generate offline Activation Codes.</div>
+      <div class="grid">
+        <section class="panel stack">
+          <h2>Admin Decode Request Code Screen</h2>
+          <label>Request Code<textarea id="requestCode" placeholder="Paste VREQ1 request code from user"></textarea></label>
+          <div class="actions"><button class="primary" id="decodeRequest">Decode / Verify Request</button><button class="secondary" id="clearRequest">Clear</button></div>
+          <div id="requestDetails" class="stack"></div>
+        </section>
+        <section class="panel stack">
+          <h2>Admin Generate Activation Code Screen</h2>
+          <div class="grid">
+            <label>License Type<select id="licenseType"><option>Trial</option><option selected>Standard</option><option>Professional</option><option>Lifetime</option></select></label>
+            <label>Duration<select id="durationDays"><option value="7">7 days</option><option value="30" selected>30 days</option><option value="90">90 days</option><option value="365">1 year</option><option value="3650">10 years</option><option value="lifetime">Lifetime</option></select></label>
+          </div>
+          <div class="grid">
+            <label>Business Name<input id="businessName" readonly></label>
+            <label>Device ID<input id="deviceId" readonly></label>
+            <label>App Version<input id="appVersion" readonly></label>
+            <label>Activation Date<input id="activationDate" type="date"></label>
+            <label>Expiry Date<input id="expiryDate" type="date"></label>
+          </div>
+          <div class="actions"><button class="primary" id="generateActivation">Generate Activation Code</button><button class="secondary" id="copyActivation">Copy Activation Code</button></div>
+          <label>Activation Code<textarea id="activationCode" readonly placeholder="Activation code will appear here"></textarea></label>
+        </section>
+      </div>
+      <section class="panel" style="margin-top:14px">
+        <div class="actions" style="justify-content:space-between; align-items:center">
+          <h2>License Records Screen</h2>
+          <button class="secondary" id="clearRecords">Clear Records</button>
+        </div>
+        <div style="overflow:auto">
+          <table>
+            <thead><tr><th>Date</th><th>Business</th><th>Device ID</th><th>License</th><th>Expiry</th><th>App Version</th></tr></thead>
+            <tbody id="recordsBody"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+    <script>
+      const APP_NAME = "VASMA System - Vehicle Auto Service Management System";
+      const REQUEST_PRIVATE_KEY = {"key_ops":["decrypt"],"ext":true,"alg":"RSA-OAEP-256","kty":"RSA","n":"hz1uChIGsnwpJq82OWdXymV2G9gqB8ioeaL7B2oxZpv8Na8MpqgUN6um1MwtH8VMnTlXbvjJFZj8XAp8N90ScOS-IbXQ86VsLTaduzGsy73_RnMNywjzmRWqbAzSGfQDoJz_wBs45pcqnwyzEjkEAuiPuP-dzey2JJFpU3_VNHT4SKWNEOPKMG2r05Vg9nysCBDgxQnfXGGnt2Ir-aeMxS3Vf5Z4ov4DK-ySLmpaVl4_0UuLR0sIWKtQ9fKSfMfFlYlMlcL5I8YE1XbdsvzkOg11M4ZhPNLcz5ZUn5NY1H2ZAX1yNWzba1RzTzh_ENNS9-cKts98qDKrElh1iizGHw","e":"AQAB","d":"F_gnyioivLyr0HrqaecqlKlB8zJvVJzYW2KrCkfkhJKt81fYrqsIlktakMm1T7W42_7fQ8BdZ3ILfEaxeHc6vv6TwkbGx4AwuZy9_QETZrMAjRx0O-GUxzOjVm45SLdKc0uQOpy4i4oMWE84Z8jqMJfGbVwEvIwxRi7tk4qLH7Y_m1gvikREPzw88RaLLegnfyz-JSTiwan5QrtUvY0suUwLbER5c0NxKiDQ0ISyMb4G1xezgrJckNdXtggj__m9PED5XNNPqeRjiU7MRRWRkTZMs5K6uUp5W197unRhkuYM5-pY1Dc-kveDrq1VpEx_6U7IlNXAs_5B9AsyHiOihQ","p":"u-oQ9UJVisFPjBP_mpKu5kbZTi_77k3PsANwbXP1lu07DFALL_7DBr1wmsj0TpoLUdUF1rqHF_Hiz8CO0PLFLEN-rN_DvTMcLzw8iudhZ8pIDx5_pU7I0gLy5GyDGRdRsBfPxjMfXb64kWP7IAHQVCjgFaNfqsDIesR5bqDtey0","q":"uD2R36gffOb4CSw32QDZnB1lyEoekpguCsYJZ32kPuTm1ertImijT8tkax5UDmSL9H7YMEsAlgYkV5yan2iJsk1razptusBAoVxNoNnTj_JH8NLdfdrnkbISxMcIzIsSrcrlB6A5qPSIbejhkdiEEK0MiSglhh2cX7Rc2NdVpfs","dp":"X1CYjW66KQloqeqy6dqhMFibfNdF-FgrkmIMMthwp79pBhPLuOqGTfLlHP31PbFRMI7WyVYPlAuzOiG3zzB05sDNji5qAJveHe913hcDBzxJVLHpmRXfMvcf8NFBpgZ3_tP1JdlkfY5x2_1UsaV54FZjY1Zc_iWPCwaBeaXTD3k","dq":"BS8WT6i3WhhVmkx4Nc7kUJQzLPOI8K7_fKYd1Z-fY3WlWReHHJS9I52hcbIkw1Lo7TQ0eQdjONVraFurrhiO50luYFIAjGSkbOXf-UqnvUEf7RLB0Ky8H0lXZdoD0V2IZQN0dkZ32N0oiY8n6aah8KYt2B4dECz9HWRByIgmjMk","qi":"YyqkHWevXU63HUo_qfjUqOMV2zYI4Yf2FvaIDfBfy0EcbJzS5jY3XRw_k96DVhXPy8oHDHUwFJ39VduwO4FLpAwrJF2myMZ9dU-SPNuX2UNsb3bvioBY4n0Y1Tli9TOeu9h5n46PNanzOD9Rp95Mf5PbObZyFEO3_7g9S1Zc_5g"};
+      const ACTIVATION_PRIVATE_KEY = {"key_ops":["sign"],"ext":true,"kty":"EC","x":"CLRLzb_XuU3ayPeSbTgSY6SdxliE684ECGBvh_yUlOQ","y":"mDtY3kNpiLxUizqFqWvbQa2SKkSCiOzJD8u11r8tWoo","crv":"P-256","d":"9iPhqX-IOv6POyblm88Vv7H_G9z3rISitTTzfdu0ChY"};
+      let decodedRequest = null;
+
+      document.querySelector("#activationDate").value = today();
+      document.querySelector("#durationDays").addEventListener("change", updateExpiry);
+      document.querySelector("#activationDate").addEventListener("change", updateExpiry);
+      document.querySelector("#decodeRequest").addEventListener("click", decodeRequestCode);
+      document.querySelector("#generateActivation").addEventListener("click", generateActivationCode);
+      document.querySelector("#copyActivation").addEventListener("click", () => copyText(document.querySelector("#activationCode").value));
+      document.querySelector("#clearRequest").addEventListener("click", () => {
+        decodedRequest = null;
+        document.querySelector("#requestCode").value = "";
+        document.querySelector("#requestDetails").innerHTML = "";
+      });
+      document.querySelector("#clearRecords").addEventListener("click", () => {
+        if (!confirm("Clear admin license records?")) return;
+        localStorage.removeItem("vasma-admin-license-records");
+        renderRecords();
+      });
+      updateExpiry();
+      renderRecords();
+
+      async function decodeRequestCode() {
+        try {
+          decodedRequest = await decryptRequestPayload(document.querySelector("#requestCode").value.trim());
+          document.querySelector("#businessName").value = decodedRequest.businessName || "";
+          document.querySelector("#deviceId").value = decodedRequest.deviceId || "";
+          document.querySelector("#appVersion").value = decodedRequest.appVersion || "";
+          document.querySelector("#licenseType").value = decodedRequest.requestedLicenseType || "Standard";
+          updateExpiry();
+          document.querySelector("#requestDetails").innerHTML = `<table><tbody>
+            <tr><th>App Name</th><td>${escapeHtml(decodedRequest.appName)}</td></tr>
+            <tr><th>Business Name</th><td>${escapeHtml(decodedRequest.businessName)}</td></tr>
+            <tr><th>Device ID</th><td>${escapeHtml(decodedRequest.deviceId)}</td></tr>
+            <tr><th>Installation Date</th><td>${escapeHtml(decodedRequest.installationDate)}</td></tr>
+            <tr><th>App Version</th><td>${escapeHtml(decodedRequest.appVersion)}</td></tr>
+            <tr><th>Requested License</th><td>${escapeHtml(decodedRequest.requestedLicenseType)}</td></tr>
+          </tbody></table>`;
+        } catch (error) {
+          alert(error.message || "Could not decode request code.");
+        }
+      }
+
+      async function generateActivationCode() {
+        if (!decodedRequest) return alert("Decode a request code first.");
+        const payload = {
+          appName: APP_NAME,
+          businessName: document.querySelector("#businessName").value,
+          deviceId: document.querySelector("#deviceId").value,
+          licenseType: document.querySelector("#licenseType").value,
+          activationDate: document.querySelector("#activationDate").value,
+          expiryDate: document.querySelector("#expiryDate").value,
+          appVersion: document.querySelector("#appVersion").value || decodedRequest.appVersion,
+          issuedAt: new Date().toISOString()
+        };
+        const payloadText = JSON.stringify(payload);
+        const privateKey = await crypto.subtle.importKey("jwk", ACTIVATION_PRIVATE_KEY, { name: "ECDSA", namedCurve: "P-256" }, false, ["sign"]);
+        const signature = new Uint8Array(await crypto.subtle.sign({ name: "ECDSA", hash: "SHA-256" }, privateKey, utf8Encode(payloadText)));
+        const code = `VACT1.${base64UrlEncode(utf8Encode(payloadText))}.${base64UrlEncode(signature)}`;
+        document.querySelector("#activationCode").value = code;
+        const records = JSON.parse(localStorage.getItem("vasma-admin-license-records") || "[]");
+        records.push({ date: today(), ...payload });
+        localStorage.setItem("vasma-admin-license-records", JSON.stringify(records));
+        renderRecords();
+      }
+
+      async function decryptRequestPayload(code) {
+        const parts = String(code || "").trim().split(".");
+        if (parts.length !== 4 || parts[0] !== "VREQ1") throw new Error("Invalid request code format.");
+        const privateKey = await crypto.subtle.importKey("jwk", REQUEST_PRIVATE_KEY, { name: "RSA-OAEP", hash: "SHA-256" }, false, ["decrypt"]);
+        const rawKey = await crypto.subtle.decrypt({ name: "RSA-OAEP" }, privateKey, base64UrlDecode(parts[1]));
+        const aesKey = await crypto.subtle.importKey("raw", rawKey, { name: "AES-GCM" }, false, ["decrypt"]);
+        const decrypted = await crypto.subtle.decrypt({ name: "AES-GCM", iv: base64UrlDecode(parts[2]) }, aesKey, base64UrlDecode(parts[3]));
+        const payload = JSON.parse(utf8Decode(new Uint8Array(decrypted)));
+        if (payload.appName !== APP_NAME) throw new Error("Request code is for another app.");
+        return payload;
+      }
+
+      function updateExpiry() {
+        const duration = document.querySelector("#durationDays").value;
+        const activation = document.querySelector("#activationDate").value || today();
+        if (duration === "lifetime") {
+          document.querySelector("#expiryDate").value = "2099-12-31";
+          return;
+        }
+        const date = new Date(`${activation}T00:00:00`);
+        date.setDate(date.getDate() + Number(duration));
+        document.querySelector("#expiryDate").value = date.toISOString().slice(0, 10);
+      }
+
+      function renderRecords() {
+        const records = JSON.parse(localStorage.getItem("vasma-admin-license-records") || "[]");
+        document.querySelector("#recordsBody").innerHTML = records.length ? records.map((record) => `<tr><td>${escapeHtml(record.date)}</td><td>${escapeHtml(record.businessName)}</td><td>${escapeHtml(record.deviceId)}</td><td>${escapeHtml(record.licenseType)}</td><td>${escapeHtml(record.expiryDate)}</td><td>${escapeHtml(record.appVersion)}</td></tr>`).join("") : '<tr><td colspan="6">No records yet.</td></tr>';
+      }
+
+      function today() { return new Date().toISOString().slice(0, 10); }
+      function utf8Encode(value) { return new TextEncoder().encode(value); }
+      function utf8Decode(bytes) { return new TextDecoder().decode(bytes); }
+      function base64UrlEncode(bytes) {
+        const binary = Array.from(bytes, (byte) => String.fromCharCode(byte)).join("");
+        return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
+      }
+      function base64UrlDecode(value) {
+        const padded = value.replace(/-/g, "+").replace(/_/g, "/").padEnd(Math.ceil(value.length / 4) * 4, "=");
+        return Uint8Array.from(atob(padded), (char) => char.charCodeAt(0));
+      }
+      async function copyText(value) {
+        if (!value) return alert("Nothing to copy");
+        await navigator.clipboard.writeText(value);
+      }
+      function escapeHtml(value = "") {
+        return String(value).replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" }[char]));
+      }
+    </script>
+  </body>
+</html>

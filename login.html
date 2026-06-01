@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - VASMA System</title>
+    <link rel="icon" type="image/svg+xml" href="icon.svg">
+    <link rel="stylesheet" href="styles.css?v=104">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #155e75 0%, #0f3b4d 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .login-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+            animation: slideIn 0.5s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .brand-mark {
+            width: 70px;
+            height: 70px;
+            background: transparent;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+
+        .brand-mark img {
+            width: 58px;
+            height: 58px;
+            display: block;
+        }
+        
+        .login-header h2 {
+            color: #155e75;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .login-header p {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #155e75;
+            box-shadow: 0 0 0 3px rgba(21, 94, 117, 0.1);
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #155e75 0%, #0f3b4d 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(21, 94, 117, 0.3);
+        }
+        
+        .login-btn:active {
+            transform: translateY(0);
+        }
+        
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            font-size: 14px;
+            text-align: center;
+            border-left: 4px solid #c33;
+        }
+        
+        .info-text {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            color: #888;
+            font-size: 12px;
+        }
+        
+        .demo-credentials {
+            background: #f0f9ff;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 12px;
+            text-align: center;
+            color: #155e75;
+        }
+        
+        .demo-credentials code {
+            background: #e0e0e0;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <div class="brand-mark"><img src="icon.svg" alt="VASMA System"></div>
+            <h2>VASMA System</h2>
+            <p>Vehicle Auto Service Management</p>
+        </div>
+        
+        <div id="errorMessage" class="error-message"></div>
+        
+        <form id="loginForm">
+            <div class="form-group">
+                <label id="usernameLabel">Business Code</label>
+                <input type="text" id="username" required autocomplete="username" placeholder="VASMA-12-04">
+            </div>
+            <div class="form-group">
+                <label id="passwordLabel">PIN / Password</label>
+                <input type="password" id="password" required autocomplete="current-password" placeholder="Enter PIN or password">
+            </div>
+            <button type="submit" class="login-btn">Login to Dashboard</button>
+        </form>
+        
+        <div class="demo-credentials">
+            <strong>Demo Credentials:</strong><br>
+            User Name: <code>demo</code> | Password: <code>demo123</code>
+        </div>
+        
+        <div class="info-text">
+            © 2024 VASMA System. All rights reserved.
+        </div>
+    </div>
+
+    <script>
+        // Get elements
+        const loginForm = document.getElementById('loginForm');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const errorDiv = document.getElementById('errorMessage');
+        const API_URL = window.VASMA_API_URL || localStorage.getItem('vasma_api_url') || (location.port === '3000' ? '' : 'http://localhost:3000');
+        const BUSINESS_ACCOUNTS_KEY = 'vasma_business_accounts';
+        const BUSINESS_SESSION_KEY = 'vasma_business_session';
+        
+        // Check if already logged in
+        function checkExistingSession() {
+            const token = localStorage.getItem('vasma_token');
+            const user = localStorage.getItem('vasma_user');
+            const loginTime = localStorage.getItem('vasma_login_time');
+            
+            if (token && user && loginTime) {
+                const hoursSinceLogin = (new Date() - new Date(loginTime)) / (1000 * 60 * 60);
+                if (hoursSinceLogin < 8) {
+                    window.location.replace('index.html');
+                } else {
+                    ['vasma_token', 'vasma_user', 'vasma_login_time', 'vasma_business_session', 'vasma-developer-mode'].forEach((key) => localStorage.removeItem(key));
+                }
+            }
+        }
+        
+        // Show error message
+        function showError(message) {
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+        
+        async function businessLoginWithBackend(businessCode, pin) {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 4000);
+            try {
+                const response = await fetch(`${API_URL}/api/auth/business-login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ businessCode, pin }),
+                    signal: controller.signal
+                });
+                const data = await response.json();
+                return { response, data };
+            } finally {
+                clearTimeout(timeoutId);
+            }
+        }
+
+        function parseBusinessCode(code) {
+            const match = String(code || '').trim().toUpperCase().match(/^VASMA-(1|2|3|12|13|23|123)-([0-9]{2,})$/);
+            if (!match) return null;
+            const serviceCode = match[1];
+            return {
+                businessCode: `VASMA-${serviceCode}-${match[2]}`,
+                serviceCode,
+                businessNumber: match[2],
+                allowedServices: [
+                    ...(serviceCode.includes('1') ? ['tire'] : []),
+                    ...(serviceCode.includes('2') ? ['carWash'] : []),
+                    ...(serviceCode.includes('3') ? ['general'] : [])
+                ],
+                packageName: packageName(serviceCode)
+            };
+        }
+
+        function packageName(serviceCode) {
+            return ({
+                '1': 'Tyre Service Only',
+                '2': 'Car Wash Only',
+                '3': 'General Service Only',
+                '12': 'Tyre Service + Car Wash',
+                '13': 'Tyre Service + General Service',
+                '23': 'Car Wash + General Service',
+                '123': 'Full Service Package'
+            })[serviceCode] || 'Unknown Package';
+        }
+
+        function generatedBusinessId() {
+            const d = new Date();
+            const yy = String(d.getFullYear()).slice(-2);
+            const mm = String(d.getMonth() + 1).padStart(2, '0');
+            const dd = String(d.getDate()).padStart(2, '0');
+            const hh = String(d.getHours()).padStart(2, '0');
+            const min = String(d.getMinutes()).padStart(2, '0');
+            return `VSM-${yy}${mm}${dd}${hh}${min}`;
+        }
+
+        function seedBusinessAccounts() {
+            const existing = JSON.parse(localStorage.getItem(BUSINESS_ACCOUNTS_KEY) || '[]');
+            if (existing.length) return existing;
+            const seeds = [
+                ['VASMA-1-01', '1010'],
+                ['VASMA-2-02', '2020'],
+                ['VASMA-3-03', '3030'],
+                ['VASMA-12-04', '1204'],
+                ['VASMA-13-05', '1305'],
+                ['VASMA-23-06', '2306'],
+                ['VASMA-123-07', '1230']
+            ].map(([businessCode, pin]) => ({ ...parseBusinessCode(businessCode), pin, temporaryPin: pin, mustChangePin: true, status: 'TRIAL', trialStartDate: new Date().toISOString().slice(0, 10) }));
+            localStorage.setItem(BUSINESS_ACCOUNTS_KEY, JSON.stringify(seeds));
+            return seeds;
+        }
+
+        function businessLogin(businessCode, pin) {
+            if (String(businessCode || '').trim().toLowerCase() === 'demo' && pin === 'demo123') {
+                const demoBusiness = {
+                    ...parseBusinessCode('VASMA-123-00'),
+                    businessId: generatedBusinessId(),
+                    businessCode: 'DEMO-TRIAL',
+                    businessNumber: '00',
+                    businessName: 'VASMA Demo Business',
+                    ownerName: 'Demo User',
+                    userName: 'Demo User',
+                    location: 'Demo Location',
+                    mobile: '',
+                    pin: 'demo123',
+                    temporaryPin: 'demo123',
+                    mustChangePin: true,
+                    status: 'TRIAL',
+                    trialStartDate: new Date().toISOString().slice(0, 10),
+                    trialDays: 14
+                };
+                return {
+                    response: { ok: true },
+                    data: {
+                        success: true,
+                        token: 'demo_trial_token_' + Date.now(),
+                        user: { id: 'demo', username: 'demo', name: 'Demo User', role: 'business', businessName: demoBusiness.businessName, businessId: demoBusiness.businessId },
+                        business: demoBusiness
+                    }
+                };
+            }
+            const parsed = parseBusinessCode(businessCode);
+            if (!parsed) return null;
+            const accounts = seedBusinessAccounts();
+            let account = accounts.find((entry) => entry.businessCode === parsed.businessCode);
+            if (!account) {
+                account = { ...parsed, businessId: generatedBusinessId(), pin, temporaryPin: pin, mustChangePin: true, status: 'TRIAL', trialStartDate: new Date().toISOString().slice(0, 10) };
+                accounts.push(account);
+                localStorage.setItem(BUSINESS_ACCOUNTS_KEY, JSON.stringify(accounts));
+            }
+            if (account.pin !== pin && account.temporaryPin !== pin) return null;
+            return {
+                response: { ok: true },
+                data: {
+                    success: true,
+                    token: 'business_token_' + Date.now(),
+                    user: { id: account.businessCode, username: account.businessCode, name: account.ownerName || account.businessCode, role: 'business', businessId: account.businessId },
+                    business: account
+                }
+            };
+        }
+
+        function demoLogin(username, password) {
+            if (username === 'Developer' && password === 'Bakk@Dev1879') {
+                return {
+                    response: { ok: true },
+                    data: {
+                        success: true,
+                        token: 'developer_token_' + Date.now(),
+                        user: {
+                            id: 'developer',
+                            username: 'Developer',
+                            name: 'Developer',
+                            role: 'developer'
+                        }
+                    }
+                };
+            }
+            return null;
+        }
+
+        // Handle login
+        async function handleLogin(e) {
+            e.preventDefault();
+            
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value;
+            
+            // Validate inputs
+            if (!username || !password) {
+                showError('Please enter both username and password');
+                return;
+            }
+            
+            // Disable button and show loading
+            const loginBtn = document.querySelector('.login-btn');
+            const originalText = loginBtn.textContent;
+            loginBtn.textContent = 'Logging in...';
+            loginBtn.disabled = true;
+            
+            try {
+                // Try to connect to backend API first
+                let response;
+                let data;
+                
+                try {
+                    ({ response, data } = await businessLoginWithBackend(username, password));
+                } catch (networkError) {
+                    console.warn('Backend business login not available, using offline trial fallback');
+                    const businessResult = businessLogin(username, password) || demoLogin(username, password);
+                    if (!businessResult) throw new Error('Invalid business code or PIN');
+                    ({ response, data } = businessResult);
+                }
+                if (!response?.ok || !data?.success) throw new Error(data?.error || 'Invalid business code or PIN');
+                
+                if (response && response.ok && data.success) {
+                    // Store session data
+                    localStorage.setItem('vasma_token', data.token);
+                    localStorage.setItem('vasma_user', JSON.stringify(data.user));
+                    localStorage.setItem('vasma_login_time', new Date().toISOString());
+                    if (data.business) localStorage.setItem(BUSINESS_SESSION_KEY, JSON.stringify(data.business));
+                    else localStorage.removeItem(BUSINESS_SESSION_KEY);
+                    if (data.user && data.user.role === 'developer') {
+                        localStorage.setItem('vasma-developer-mode', 'true');
+                    } else {
+                        localStorage.removeItem('vasma-developer-mode');
+                    }
+                    
+                    // Show success message
+                    showError('Login successful! Redirecting...');
+                    errorDiv.style.background = '#e8f5e9';
+                    errorDiv.style.color = '#2e7d32';
+                    
+                    // Redirect to dashboard
+                    setTimeout(() => {
+                        window.location.replace('index.html');
+                    }, 500);
+                } else {
+                    showError(data.error || data.message || 'Invalid username or password');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showError('Login failed. Please check your credentials.');
+            } finally {
+                // Reset button
+                loginBtn.textContent = originalText;
+                loginBtn.disabled = false;
+            }
+        }
+        
+        // Add event listeners
+        loginForm.addEventListener('submit', handleLogin);
+        
+        // Add enter key support
+        passwordInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                loginForm.dispatchEvent(new Event('submit'));
+            }
+        });
+        
+        // Check existing session on page load
+        checkExistingSession();
+        
+        // Focus on username field
+        usernameInput.focus();
+    </script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{
+  "name": "VASMA Demo Panel",
+  "short_name": "VASMA Demo",
+  "description": "Demo panel for VASMA business functions with daily refreshed sample transactions.",
+  "start_url": "./login.html",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#155e75",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VASMA Admin Panel</title>
+    <link rel="icon" type="image/svg+xml" href="../icon.svg" />
+    <link rel="stylesheet" href="./superadmin.css" />
+  </head>
+  <body>
+    <aside class="admin-sidebar">
+      <div class="brand">
+        <div class="brand-mark"><img src="../icon.svg" alt="" /></div>
+        <div>
+          <strong>VASMA</strong>
+          <span>Admin Panel</span>
+        </div>
+      </div>
+      <nav>
+        <button class="nav active" data-view="overview">Overview</button>
+        <button class="nav" data-view="packages">Manage Packages</button>
+        <button class="nav" data-view="subscriptions">Manage Subscriptions</button>
+        <button class="nav" data-view="businesses">Registered Businesses</button>
+        <button class="nav" data-view="reports">Reports</button>
+        <button class="nav" data-view="landing">Landing Pages</button>
+        <button class="nav" data-view="payments">Payment Methods</button>
+      </nav>
+    </aside>
+
+    <main class="admin-main">
+      <header class="topbar">
+        <div>
+          <p>System owner workspace</p>
+          <h1 id="pageTitle">Overview</h1>
+        </div>
+        <div class="top-actions">
+          <a href="../index.html">Business App</a>
+          <button id="logoutBtn" title="Logout">⏻</button>
+        </div>
+      </header>
+
+      <section id="message" class="message" hidden></section>
+      <section id="content"></section>
+    </main>
+
+    <script src="./superadmin.js"></script>
+  </body>
+</html>

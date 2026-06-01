@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VASMA Demo Panel Login</title>
+  <link rel="icon" type="image/svg+xml" href="icon.svg">
+  <link rel="stylesheet" href="styles.css?v=demo-8">
+  <style>
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: linear-gradient(135deg, #155e75 0%, #06283a 100%);
+    }
+    .demo-login-card {
+      width: min(920px, 100%);
+      padding: clamp(22px, 4vw, 34px);
+      border-radius: 18px;
+      background: #fffdf7;
+      box-shadow: 0 24px 70px rgba(6, 40, 58, 0.32);
+    }
+    .demo-login-card .brand-mark {
+      width: 70px;
+      height: 70px;
+      margin: 0 auto 16px;
+    }
+    .demo-login-card h1,
+    .demo-login-card > p {
+      text-align: center;
+    }
+    .demo-login-card h1 {
+      margin: 0 0 8px;
+      color: #06283a;
+    }
+    .demo-login-card > p {
+      color: #5f7280;
+    }
+    .demo-note {
+      margin: 18px auto 20px;
+      max-width: 620px;
+      padding: 14px;
+      border: 1px solid #c8dce4;
+      border-radius: 10px;
+      background: #e6f6f8;
+      color: #06283a;
+      font-size: 14px;
+      line-height: 1.45;
+    }
+    .demo-package-tabs {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      margin: 18px 0 12px;
+    }
+    .demo-package-tab {
+      flex: 0 0 auto;
+      border: 1px solid #bdd7df;
+      border-radius: 999px;
+      padding: 10px 14px;
+      background: #e6f6f8;
+      color: #155e75;
+      font-weight: 900;
+      cursor: pointer;
+    }
+    .demo-package-tab.active {
+      background: #155e75;
+      color: #fff;
+    }
+    .demo-package-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .demo-package-card {
+      border: 1px solid #c8dce4;
+      border-radius: 12px;
+      padding: 15px;
+      background: #fff;
+      text-align: left;
+      cursor: pointer;
+    }
+    .demo-package-card.active {
+      border-color: #155e75;
+      box-shadow: 0 0 0 3px rgba(21, 94, 117, 0.16);
+    }
+    .demo-package-card strong {
+      display: block;
+      color: #06283a;
+      font-size: 17px;
+      margin-bottom: 8px;
+    }
+    .demo-package-card span {
+      display: inline-block;
+      margin: 3px 4px 0 0;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: #e6f6f8;
+      color: #155e75;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .demo-login-card .enter-button {
+      width: 100%;
+      margin-top: 6px;
+      padding: 14px;
+      border: 0;
+      border-radius: 10px;
+      background: #155e75;
+      color: white;
+      font-weight: 900;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <main class="demo-login-card">
+    <div class="brand-mark"><img src="icon.svg" alt="VASMA Demo" class="brand-car-icon"></div>
+    <h1>VASMA Demo Panel</h1>
+    <p>Select a demo package before opening the business app.</p>
+    <div class="demo-note">
+      Demo registration runs for 7 days from the date you register. You can add your own demo data for practice; the daily sample reset remains automatic at 00:00.
+    </div>
+
+    <div class="demo-package-tabs" role="tablist" aria-label="Demo package groups">
+      <button class="demo-package-tab active" type="button" data-group="single">Single Package</button>
+      <button class="demo-package-tab" type="button" data-group="combo">Combo Package</button>
+      <button class="demo-package-tab" type="button" data-group="full">Full Package</button>
+    </div>
+    <div id="demoPackageGrid" class="demo-package-grid"></div>
+    <button type="button" id="enterDemo" class="enter-button">Open Demo Panel</button>
+  </main>
+
+  <script>
+    const packages = [
+      { group: "single", code: "1", name: "Tyre Service", services: ["tire"] },
+      { group: "single", code: "2", name: "Car Wash", services: ["carWash"] },
+      { group: "single", code: "3", name: "General Service", services: ["general"] },
+      { group: "combo", code: "12", name: "Tyre Service + Car Wash", services: ["tire", "carWash"] },
+      { group: "combo", code: "13", name: "Tyre Service + General Service", services: ["tire", "general"] },
+      { group: "combo", code: "23", name: "Car Wash + General Service", services: ["carWash", "general"] },
+      { group: "full", code: "123", name: "Full Service Package", services: ["tire", "carWash", "general"] }
+    ];
+    const serviceLabels = { tire: "Tyre Service", carWash: "Car Wash", general: "General Service" };
+    const API_URL = window.VASMA_API_URL || localStorage.getItem("vasma_api_url") || (location.port === "3000" ? "" : "http://localhost:3000");
+    let activeGroup = "single";
+    let selectedPackage = packages[0];
+
+    function rememberDemoRegistration(business, registeredAt) {
+      const demoId = localStorage.getItem("vasma_demo_registration_id") || `demo-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+      localStorage.setItem("vasma_demo_registration_id", demoId);
+      fetch(`${API_URL}/api/public/demo-registration`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: demoId,
+          packageCode: business.serviceCode,
+          packageName: business.packageName,
+          allowedServices: business.allowedServices,
+          businessName: business.businessName,
+          ownerName: business.ownerName,
+          userName: business.userName,
+          mobile: business.mobile,
+          location: business.location,
+          registeredAt,
+          trialDays: business.trialDays
+        })
+      }).catch(() => {});
+    }
+
+    function renderPackages() {
+      document.querySelectorAll(".demo-package-tab").forEach((button) => button.classList.toggle("active", button.dataset.group === activeGroup));
+      document.getElementById("demoPackageGrid").innerHTML = packages
+        .filter((plan) => plan.group === activeGroup)
+        .map((plan) => `
+          <button type="button" class="demo-package-card ${plan.code === selectedPackage.code ? "active" : ""}" data-code="${plan.code}">
+            <strong>${plan.name}</strong>
+            <div>${plan.services.map((service) => `<span>${serviceLabels[service]}</span>`).join("")}</div>
+          </button>
+        `).join("");
+      document.querySelectorAll(".demo-package-card").forEach((card) => {
+        card.addEventListener("click", () => {
+          selectedPackage = packages.find((plan) => plan.code === card.dataset.code) || selectedPackage;
+          renderPackages();
+        });
+      });
+    }
+
+    document.querySelectorAll(".demo-package-tab").forEach((button) => {
+      button.addEventListener("click", () => {
+        activeGroup = button.dataset.group;
+        selectedPackage = packages.find((plan) => plan.group === activeGroup) || selectedPackage;
+        renderPackages();
+      });
+    });
+
+    document.getElementById("enterDemo").addEventListener("click", () => {
+      const registeredAt = new Date().toISOString();
+      [
+        "vasma-demo-service-manager-v1",
+        "vasma-demo-reset-day",
+        "vasma-demo-sample-version",
+        "vasma-demo-license-store-v1",
+        "vasma-dashboard-range-mode",
+        "vasma-dashboard-start-date",
+        "vasma-dashboard-end-date"
+      ].forEach((key) => localStorage.removeItem(key));
+      const user = {
+        id: "demo-panel-user",
+        username: "demo-panel",
+        name: "Demo User",
+        role: "business",
+        businessName: "VASMA Demo Panel",
+        businessId: "DEMO-PANEL-001"
+      };
+      const business = {
+        businessId: "DEMO-PANEL-001",
+        businessCode: `DEMO-${selectedPackage.code}`,
+        serviceCode: selectedPackage.code,
+        businessName: "VASMA Demo Panel",
+        ownerName: "Demo Owner",
+        userName: "Demo User",
+        location: "Dar es Salaam Demo Branch",
+        mobile: "+255 700 000 000",
+        packageName: selectedPackage.name,
+        allowedServices: selectedPackage.services,
+        mustChangePin: true,
+        status: "DEMO",
+        trialStartDate: registeredAt.slice(0, 10),
+        trialDays: 7,
+        demoRegisteredAt: registeredAt
+      };
+      localStorage.setItem("vasma_token", `demo_panel_token_${Date.now()}`);
+      localStorage.setItem("vasma_user", JSON.stringify(user));
+      localStorage.setItem("vasma_login_time", registeredAt);
+      localStorage.setItem("vasma_business_session", JSON.stringify(business));
+      localStorage.setItem("vasma-demo-install-date", registeredAt.slice(0, 10));
+      localStorage.setItem("vasma_sync_status", "demo");
+      rememberDemoRegistration(business, registeredAt);
+      window.location.href = "index.html";
+    });
+
+    renderPackages();
+  </script>
+</body>
+</html>

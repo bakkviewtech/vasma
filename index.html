@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>VASMA System | Packages & Registration</title>
+  <!-- Google Fonts + simple smooth reset -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+      background: #f4f7fc;
+      color: #1a2c3e;
+      line-height: 1.4;
+      scroll-behavior: smooth;
+    }
+
+    /* header */
+    header {
+      background: white;
+      backdrop-filter: blur(0px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.02), 0 2px 6px rgba(0,0,0,0.05);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      border-bottom: 1px solid #e2edf2;
+    }
+
+    header div strong {
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #0f2b3d, #1b4a6e);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      letter-spacing: -0.3px;
+    }
+
+    header div span {
+      margin-left: 0.75rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #4a6f8a;
+      border-left: 2px solid #cbdbe6;
+      padding-left: 0.75rem;
+    }
+
+    header a {
+      background: #0f2b3d;
+      color: white;
+      text-decoration: none;
+      padding: 0.55rem 1.4rem;
+      border-radius: 60px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    header a:hover {
+      background: #1e4a6e;
+      transform: scale(0.97);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    /* main container */
+    main {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+    }
+
+    /* hero section */
+    .hero {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .hero h1 {
+      font-size: 3.2rem;
+      font-weight: 800;
+      background: linear-gradient(125deg, #0b2b3f, #1f6e8c);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      letter-spacing: -1px;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      color: #2c5368;
+      margin-top: 0.75rem;
+      font-weight: 500;
+    }
+
+    /* packages grid */
+    .packages {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      justify-content: center;
+      margin: 2rem 0 2rem;
+    }
+
+    .package-card {
+      background: white;
+      border-radius: 2rem;
+      flex: 1;
+      min-width: 260px;
+      max-width: 340px;
+      padding: 1.8rem 1.5rem 2rem;
+      transition: all 0.25s ease;
+      box-shadow: 0 15px 35px -12px rgba(0,0,0,0.1);
+      border: 1px solid rgba(144, 187, 207, 0.3);
+      cursor: pointer;
+      position: relative;
+    }
+
+    .package-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 25px 40px -14px rgba(0, 32, 54, 0.2);
+      border-color: #9ac2d4;
+    }
+
+    .package-card.selected {
+      border: 2px solid #1e6f5c;
+      background: #fefef7;
+      box-shadow: 0 20px 30px -12px rgba(30,111,92,0.2);
+    }
+
+    .package-badge {
+      display: inline-block;
+      background: #eef3f7;
+      padding: 0.25rem 0.9rem;
+      border-radius: 50px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #1c6d4c;
+      margin-bottom: 1.2rem;
+      letter-spacing: 0.3px;
+    }
+
+    .package-card h3 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      color: #0e2f40;
+    }
+
+    .price {
+      font-size: 1.7rem;
+      font-weight: 800;
+      color: #1f6e8c;
+      margin: 0.75rem 0 1rem;
+      display: flex;
+      align-items: baseline;
+      gap: 0.25rem;
+      flex-wrap: wrap;
+    }
+
+    .price small {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #5c7e94;
+    }
+
+    .currency-note {
+      font-size: 0.7rem;
+      font-weight: 400;
+      background: #eef2f5;
+      display: inline-block;
+      padding: 0.2rem 0.5rem;
+      border-radius: 20px;
+      margin-left: 0.5rem;
+      color: #2c5a6e;
+    }
+
+    .features-list {
+      list-style: none;
+      margin: 1.2rem 0;
+    }
+
+    .features-list li {
+      padding: 0.45rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #254e64;
+      border-bottom: 1px dashed #e2edf2;
+    }
+
+    .features-list li::before {
+      content: "✓";
+      color: #1e8f6e;
+      font-weight: 800;
+      background: #e0f0ea;
+      width: 20px;
+      height: 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 30px;
+      font-size: 0.8rem;
+    }
+
+    .select-btn {
+      margin-top: 1rem;
+      background: #eef2f5;
+      border: none;
+      width: 100%;
+      padding: 0.7rem;
+      border-radius: 60px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #1a4c68;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .package-card.selected .select-btn {
+      background: #1f6e8c;
+      color: white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    /* How It Works Section */
+    .how-it-works {
+      margin: 4rem 0 3rem;
+      text-align: center;
+    }
+
+    .how-it-works h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #0f2b3d;
+      margin-bottom: 2rem;
+      position: relative;
+      display: inline-block;
+    }
+
+    .how-it-works h2:after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 20%;
+      width: 60%;
+      height: 3px;
+      background: linear-gradient(90deg, #1f6e8c, #9ac2d4);
+      border-radius: 3px;
+    }
+
+    .steps-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      justify-content: center;
+      margin-top: 1.5rem;
+    }
+
+    .step-card {
+      background: white;
+      border-radius: 1.8rem;
+      padding: 2rem 1.5rem;
+      flex: 1;
+      min-width: 220px;
+      max-width: 300px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+      transition: all 0.3s ease;
+      border: 1px solid #e2edf2;
+    }
+
+    .step-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 30px -12px rgba(31,110,140,0.15);
+      border-color: #c2dfea;
+    }
+
+    .step-number {
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, #1f6e8c, #0f4b62);
+      color: white;
+      font-size: 1.8rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 60px;
+      margin: 0 auto 1.2rem;
+      box-shadow: 0 8px 14px rgba(0,0,0,0.1);
+    }
+
+    .step-card h3 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 0.8rem;
+      color: #1a4c68;
+    }
+
+    .step-card p {
+      font-size: 0.95rem;
+      color: #2c5a6e;
+      line-height: 1.5;
+    }
+
+    /* register section */
+    .register {
+      background: white;
+      border-radius: 2rem;
+      padding: 2rem 2rem 2.5rem;
+      margin-top: 2.5rem;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05);
+      border: 1px solid #dde9ef;
+    }
+
+    .register h2 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+      color: #0f2b3d;
+    }
+
+    form {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.2rem 1.5rem;
+      margin-top: 1.8rem;
+    }
+
+    form label {
+      display: flex;
+      flex-direction: column;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: #1f5370;
+      gap: 0.4rem;
+    }
+
+    form input, form select {
+      padding: 0.8rem 1rem;
+      border-radius: 1rem;
+      border: 1px solid #cbdbe0;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      background: #fefefe;
+      transition: 0.2s;
+    }
+
+    form input:focus, form select:focus {
+      border-color: #1f6e8c;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(31,110,140,0.2);
+    }
+
+    button[type="submit"] {
+      grid-column: 1 / -1;
+      background: #1b4a6e;
+      color: white;
+      border: none;
+      padding: 1rem;
+      font-weight: 700;
+      font-size: 1rem;
+      border-radius: 2rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 0.5rem;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    }
+
+    button[type="submit"]:hover {
+      background: #0f3b57;
+      transform: translateY(-2px);
+    }
+
+    .result {
+      margin-top: 1.5rem;
+      background: #e7f3f0;
+      padding: 1rem 1.4rem;
+      border-radius: 1.5rem;
+      border-left: 5px solid #1f6e8c;
+      font-weight: 500;
+      color: #11543f;
+    }
+
+    /* responsive touches */
+    @media (max-width: 700px) {
+      main {
+        padding: 1rem;
+      }
+      .hero h1 {
+        font-size: 2.4rem;
+      }
+      .register {
+        padding: 1.5rem;
+      }
+      header div span {
+        display: block;
+        margin-left: 0;
+        border-left: none;
+        padding-left: 0;
+        margin-top: 0.2rem;
+      }
+      header {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+      }
+      .step-card {
+        max-width: 100%;
+      }
+      .price {
+        font-size: 1.4rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <strong>VASMA System</strong>
+      <span>Vehicle Auto Service Management System</span>
+    </div>
+    <a href="../login.html">Login</a>
+  </header>
+  <main>
+    <section class="hero">
+      <h1 id="landingTitle">VASMA System</h1>
+      <p id="landingSubtitle">Choose your package and register your business.</p>
+    </section>
+
+    <section>
+      <h2 style="text-align: center; font-size: 1.8rem; margin-bottom: 1rem;">⚙️ Tailored Packages</h2>
+      <div id="packages" class="packages"></div>
+    </section>
+
+    <!-- "HOW IT WORKS" SECTION -->
+    <section class="how-it-works">
+      <h2>📌 How It Works</h2>
+      <div class="steps-container">
+        <div class="step-card">
+          <div class="step-number">1</div>
+          <h3>Choose Package</h3>
+          <p>Select the plan that fits your business — Startup (Car Wash), Combo (Wash + Services), or Premium (Full Garage).</p>
+        </div>
+        <div class="step-card">
+          <div class="step-number">2</div>
+          <h3>Register Business</h3>
+          <p>Fill in your business & owner details, set a secure PIN, and submit your registration in seconds.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-number">3</div>
+          <h3>Get Business Code</h3>
+          <p>Receive a unique business code instantly. Use it along with your PIN to access the VASMA dashboard and manage operations.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-number">4</div>
+          <h3>Start Managing</h3>
+          <p>Track customers, services, inventory, and garage workflows — everything unified in one powerful system.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="register">
+      <h2>📋 Register Business</h2>
+      <form id="registerForm">
+        <label>Selected Package
+          <select name="planId" id="packageSelect" required></select>
+        </label>
+        <label>Business Name
+          <input name="businessName" required placeholder="e.g., Fuad Auto Service">
+        </label>
+        <label>Owner Name
+          <input name="ownerName" required placeholder="Full name">
+        </label>
+        <label>Mobile Number
+          <input name="mobile" required placeholder="+255 xxx xxx xxx">
+        </label>
+        <label>Location
+          <input name="location" placeholder="Street, city, area">
+        </label>
+        <label>New PIN (min 4 digits)
+          <input name="pin" type="password" required minlength="4" maxlength="8" placeholder="Create PIN">
+        </label>
+        <button type="submit">🚀 Register and Get Business Code</button>
+      </form>
+      <div id="result" class="result" hidden></div>
+    </section>
+  </main>
+
+  <script>
+    // ---------- PACKAGE DEFINITIONS WITH TANZANIAN SHILLINGS (TZS) ----------
+    const PACKAGES = [
+      {
+        id: "pkg_startup",
+        name: "Startup Package",
+        tag: "Car Wash Focus",
+        description: "Ideal for business owners focusing on premium car wash.",
+        price: "25,000",
+        currency: "TZS",
+        period: "/ month",
+        features: [
+          "Unlimited car wash tickets",
+          "Customer loyalty tracker",
+          "Basic wash analytics",
+          "Staff schedule (up to 3)"
+        ],
+        type: "startup"
+      },
+      {
+        id: "pkg_combo",
+        name: "Combo Package",
+        tag: "Car Wash + Services",
+        description: "Oil change, tire alignment, waxing, air filling & more.",
+        price: "35,000",
+        currency: "TZS",
+        period: "/ month",
+        features: [
+          "All Startup features",
+          "Service orders (oil, alignment, waxing)",
+          "Inventory for oils & filters",
+          "Customer vehicle history",
+          "Digital checklists"
+        ],
+        type: "combo"
+      },
+      {
+        id: "pkg_premium",
+        name: "Premium Package",
+        tag: "Full Garage Suite",
+        description: "Car wash + full services + garage & repair management.",
+        price: "50,000",
+        currency: "TZS",
+        period: "/ month",
+        features: [
+          "All Combo features",
+          "Garage repair workflow",
+          "Mechanic assignment & tasks",
+          "Parts ordering & inventory",
+          "Advanced financial reports",
+          "Multi-branch support"
+        ],
+        type: "premium"
+      }
+    ];
+
+    // Helper: render package cards and populate select dropdown
+    function renderPackages() {
+      const container = document.getElementById('packages');
+      const selectEl = document.getElementById('packageSelect');
+      if (!container) return;
+      
+      // Clear existing
+      container.innerHTML = '';
+      selectEl.innerHTML = '';
+
+      // Build cards and options
+      PACKAGES.forEach((pkg, idx) => {
+        // --- Card ---
+        const card = document.createElement('div');
+        card.className = 'package-card';
+        card.dataset.pkgId = pkg.id;
+        
+        const badge = document.createElement('div');
+        badge.className = 'package-badge';
+        badge.innerText = pkg.tag;
+        
+        const title = document.createElement('h3');
+        title.innerText = pkg.name;
+        
+        const priceDiv = document.createElement('div');
+        priceDiv.className = 'price';
+        priceDiv.innerHTML = `${pkg.currency} ${pkg.price}<small>${pkg.period}</small><span class="currency-note">Tanzania Shillings</span>`;
+        
+        const featuresList = document.createElement('ul');
+        featuresList.className = 'features-list';
+        pkg.features.forEach(feat => {
+          const li = document.createElement('li');
+          li.innerText = feat;
+          featuresList.appendChild(li);
+        });
+        
+        const selectBtn = document.createElement('button');
+        selectBtn.className = 'select-btn';
+        selectBtn.innerText = 'Select this plan';
+        selectBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          // remove selected class from all cards, add to current
+          document.querySelectorAll('.package-card').forEach(c => c.classList.remove('selected'));
+          card.classList.add('selected');
+          // update dropdown value
+          if (selectEl) selectEl.value = pkg.id;
+          // smooth scroll to registration form
+          document.querySelector('.register').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+        
+        card.appendChild(badge);
+        card.appendChild(title);
+        card.appendChild(priceDiv);
+        card.appendChild(featuresList);
+        card.appendChild(selectBtn);
+        
+        // optional: click on card area also selects
+        card.addEventListener('click', (e) => {
+          if (e.target.tagName !== 'BUTTON') {
+            document.querySelectorAll('.package-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+            if (selectEl) selectEl.value = pkg.id;
+          }
+        });
+        
+        container.appendChild(card);
+        
+        // --- Select options with TZS display ---
+        const option = document.createElement('option');
+        option.value = pkg.id;
+        option.textContent = `${pkg.name} - ${pkg.currency} ${pkg.price}${pkg.period}`;
+        selectEl.appendChild(option);
+        
+        // If first package is default selected
+        if (idx === 0) {
+          option.selected = true;
+          card.classList.add('selected');
+        }
+      });
+      
+      // ensure default selected card matches selected option
+      const defaultSelectedId = selectEl.value;
+      const defaultCard = Array.from(document.querySelectorAll('.package-card')).find(card => card.dataset.pkgId === defaultSelectedId);
+      if (defaultCard && !defaultCard.classList.contains('selected')) {
+        document.querySelectorAll('.package-card').forEach(c => c.classList.remove('selected'));
+        defaultCard.classList.add('selected');
+      }
+      
+      // sync dropdown change with card selection
+      selectEl.addEventListener('change', (e) => {
+        const selectedPkgId = e.target.value;
+        document.querySelectorAll('.package-card').forEach(card => {
+          if (card.dataset.pkgId === selectedPkgId) {
+            card.classList.add('selected');
+          } else {
+            card.classList.remove('selected');
+          }
+        });
+      });
+    }
+    
+    // Helper: generate unique business code (6–8 alphanumeric uppercase)
+    function generateBusinessCode(businessName, ownerName) {
+      const timestamp = Date.now().toString(36).slice(-4).toUpperCase();
+      const randomPart = Math.random().toString(36).substring(2, 5).toUpperCase();
+      const nameInitials = (businessName.replace(/[^a-zA-Z]/g, '').slice(0, 3) || 'VAS').toUpperCase();
+      return `${nameInitials}-${timestamp}${randomPart}`;
+    }
+    
+    // Store registration data (simulate local storage / in-memory)
+    function registerBusiness(formData) {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          const planId = formData.get('planId');
+          const businessName = formData.get('businessName').trim();
+          const ownerName = formData.get('ownerName').trim();
+          const mobile = formData.get('mobile').trim();
+          const location = formData.get('location').trim() || 'Not specified';
+          const pin = formData.get('pin');
+          
+          // validation on server-like side
+          if (!businessName || !ownerName || !mobile || !pin) {
+            resolve({ success: false, message: '❌ All fields are required (Business Name, Owner, Mobile, PIN).' });
+            return;
+          }
+          if (pin.length < 4) {
+            resolve({ success: false, message: '❌ PIN must be at least 4 characters.' });
+            return;
+          }
+          if (!mobile.match(/[0-9+()-\s]{8,}/)) {
+            resolve({ success: false, message: '⚠️ Please enter a valid mobile number (digits, +, spaces).' });
+            return;
+          }
+          
+          const selectedPackageObj = PACKAGES.find(p => p.id === planId);
+          if (!selectedPackageObj) {
+            resolve({ success: false, message: 'Invalid package selection.' });
+            return;
+          }
+          
+          // generate unique business code
+          const businessCode = generateBusinessCode(businessName, ownerName);
+          const registrationTimestamp = new Date().toLocaleString();
+          
+          // store in localStorage for demo "mock database"
+          const registrationRecord = {
+            businessCode,
+            businessName,
+            ownerName,
+            mobile,
+            location,
+            package: selectedPackageObj.name,
+            packageId: planId,
+            price: `${selectedPackageObj.currency} ${selectedPackageObj.price}`,
+            pinHash: `***${pin.slice(-2)}`,
+            registeredAt: registrationTimestamp
+          };
+          
+          let allRegistrations = [];
+          const stored = localStorage.getItem('vasma_registrations');
+          if (stored) {
+            try {
+              allRegistrations = JSON.parse(stored);
+            } catch(e) { allRegistrations = []; }
+          }
+          allRegistrations.push(registrationRecord);
+          localStorage.setItem('vasma_registrations', JSON.stringify(allRegistrations));
+          
+          resolve({
+            success: true,
+            businessCode,
+            packageName: selectedPackageObj.name,
+            businessName,
+            ownerName,
+            packagePrice: `${selectedPackageObj.currency} ${selectedPackageObj.price}`,
+            message: `✅ Registration successful! Your business is now active under ${selectedPackageObj.name}.`
+          });
+        }, 600);
+      });
+    }
+    
+    // display result with business code and instructions
+    function showResult(resultData) {
+      const resultDiv = document.getElementById('result');
+      if (!resultDiv) return;
+      resultDiv.hidden = false;
+      if (resultData.success) {
+        resultDiv.innerHTML = `
+          <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+            <strong style="font-size: 1.2rem;">🎉 Welcome, ${escapeHtml(resultData.businessName)}!</strong>
+            <div style="background: #d9f0e8; padding: 0.75rem 1rem; border-radius: 1rem;">
+              <span style="font-weight:800">BUSINESS CODE:</span> 
+              <span style="font-family: monospace; font-size:1.3rem; letter-spacing:1px; background:white; padding:0.2rem 0.8rem; border-radius:40px;">${escapeHtml(resultData.businessCode)}</span>
+            </div>
+            <p><strong>📦 Package:</strong> ${escapeHtml(resultData.packageName)} (${escapeHtml(resultData.packagePrice)}/month)<br>
+            <strong>👤 Owner:</strong> ${escapeHtml(resultData.ownerName)}<br>
+            🔐 Use your Business Code + PIN to login into the VASMA dashboard.<br>
+            <em>An email/SMS with credentials has been simulated. You can now access the system using <strong>${escapeHtml(resultData.businessCode)}</strong> and your chosen PIN.</em>
+            </p>
+            <button id="resetRegisterBtn" style="background: none; border:1px solid #1f6e8c; padding:0.5rem 1rem; border-radius:3rem; width:fit-content; margin-top:0.5rem; cursor:pointer;">➕ Register another business</button>
+          </div>
+        `;
+        const resetBtn = document.getElementById('resetRegisterBtn');
+        if (resetBtn) {
+          resetBtn.addEventListener('click', () => {
+            document.getElementById('registerForm').reset();
+            resultDiv.hidden = true;
+            const defaultPkg = PACKAGES[0].id;
+            const selectEl = document.getElementById('packageSelect');
+            if (selectEl) selectEl.value = defaultPkg;
+            const defaultCard = Array.from(document.querySelectorAll('.package-card')).find(card => card.dataset.pkgId === defaultPkg);
+            if (defaultCard) {
+              document.querySelectorAll('.package-card').forEach(c => c.classList.remove('selected'));
+              defaultCard.classList.add('selected');
+            }
+            document.querySelector('.packages').scrollIntoView({ behavior: 'smooth' });
+          });
+        }
+      } else {
+        resultDiv.innerHTML = `<span style="color:#b13e3e;">⚠️ ${escapeHtml(resultData.message)}</span><br><small>Please check the fields and try again.</small>`;
+      }
+    }
+    
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str.replace(/[&<>]/g, function(m) {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
+      }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
+        return c;
+      });
+    }
+    
+    function initFormHandler() {
+      const form = document.getElementById('registerForm');
+      if (!form) return;
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const resultDiv = document.getElementById('result');
+        if (resultDiv) resultDiv.hidden = true;
+        
+        const formData = new FormData(form);
+        if (!formData.get('planId')) {
+          if (resultDiv) {
+            resultDiv.hidden = false;
+            resultDiv.innerHTML = '❌ Please select a valid package.';
+          }
+          return;
+        }
+        
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerText;
+        submitBtn.innerText = '⏳ Registering...';
+        submitBtn.disabled = true;
+        
+        const response = await registerBusiness(formData);
+        showResult(response);
+        
+        submitBtn.innerText = originalText;
+        submitBtn.disabled = false;
+        
+        if (response.success) {
+          form.querySelector('input[name="pin"]').value = '';
+        }
+      });
+    }
+    
+    function syncInitialSelection() {
+      const selectEl = document.getElementById('packageSelect');
+      if (selectEl && selectEl.value) {
+        const selectedId = selectEl.value;
+        document.querySelectorAll('.package-card').forEach(card => {
+          if (card.dataset.pkgId === selectedId) {
+            card.classList.add('selected');
+          } else {
+            card.classList.remove('selected');
+          }
+        });
+      }
+    }
+    
+    document.addEventListener('DOMContentLoaded', () => {
+      renderPackages();
+      initFormHandler();
+      syncInitialSelection();
+      const titleEl = document.getElementById('landingTitle');
+      if (titleEl) titleEl.innerText = 'VASMA System';
+      const subtitle = document.getElementById('landingSubtitle');
+      if (subtitle) subtitle.innerText = 'Packages built for car wash, service stations & full garages';
+    });
+  </script>
+</body>
+</html>

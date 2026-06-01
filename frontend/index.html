@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#155e75" />
+    <title>VASMA System</title>
+    <link rel="icon" type="image/svg+xml" href="icon.svg" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="stylesheet" href="styles.css?v=107" />
+    
+    <!-- AUTHENTICATION CHECK - MUST BE FIRST SCRIPT -->
+    <script>
+      (function() {
+        // Check if user is logged in
+        const token = localStorage.getItem('vasma_token');
+        const user = localStorage.getItem('vasma_user');
+        const loginTime = localStorage.getItem('vasma_login_time');
+        
+        // If not logged in, redirect to login page immediately
+        if (!token || !user) {
+          window.location.replace('login.html');
+          return;
+        }
+        
+        // Check if session is expired (8 hours)
+        if (loginTime) {
+          const hoursSinceLogin = (new Date() - new Date(loginTime)) / (1000 * 60 * 60);
+          if (hoursSinceLogin >= 8) {
+            // Clear expired session
+            localStorage.removeItem('vasma_token');
+            localStorage.removeItem('vasma_user');
+            localStorage.removeItem('vasma_login_time');
+            window.location.replace('login.html');
+            return;
+          }
+        }
+        
+        // Optional: Verify user object is valid
+        try {
+          const userData = JSON.parse(user);
+          if (!userData.id || !userData.username) {
+            throw new Error('Invalid user data');
+          }
+        } catch (e) {
+          localStorage.clear();
+          window.location.replace('login.html');
+          return;
+        }
+        
+        // Store user data globally for use in app
+        window.currentUser = JSON.parse(user);
+      })();
+    </script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside id="sidebar" class="sidebar">
+        <div class="brand">
+          <div class="brand-mark"><img src="icon.svg" alt="" class="brand-car-icon" /></div>
+          <div>
+            <strong id="brandBusinessName">VASMA</strong>
+            <span id="brandAppName">System</span>
+          </div>
+        </div>
+        <nav class="nav" aria-label="Main navigation">
+          <button class="nav-item active" data-view="dashboard">Dashboard</button>
+          <button class="nav-item" data-view="customers">Customers</button>
+          <button class="nav-item" data-view="jobs">Job Cards</button>
+          <button class="nav-item" data-view="confirmation">Work Confirmation</button>
+          <button class="nav-item" data-view="payments">Payments</button>
+          <button class="nav-item" data-view="serviceCards">Service Cards</button>
+          <button class="nav-item" data-view="expenses">Expenses</button>
+          <button class="nav-item" data-view="commissions">Commissions</button>
+
+          <div class="nav-group" data-menu-group="admin">
+            <button class="nav-item nav-parent" data-view="admin" data-menu="admin" aria-expanded="false">Transaction Edit</button>
+            <div class="nav-submenu" data-submenu="admin" hidden>
+              <button class="nav-subitem" data-view="admin" data-subkey="adminType" data-subvalue="customers">Customers</button>
+              <button class="nav-subitem" data-view="admin" data-subkey="adminType" data-subvalue="jobCards">Job Cards</button>
+              <button class="nav-subitem" data-view="admin" data-subkey="adminType" data-subvalue="payments">Payments</button>
+              <button class="nav-subitem" data-view="admin" data-subkey="adminType" data-subvalue="expenses">Expenses</button>
+              <button class="nav-subitem" data-view="admin" data-subkey="adminType" data-subvalue="commissions">Commissions</button>
+            </div>
+          </div>
+
+          <div class="nav-group" data-menu-group="businessAdmin">
+            <button class="nav-item nav-parent" data-view="businessAdmin" data-menu="businessAdmin" aria-expanded="false">Business Admin</button>
+            <div class="nav-submenu" data-submenu="businessAdmin" hidden>
+              <button class="nav-subitem" data-view="businessAdmin" data-subkey="businessAdminSection" data-subvalue="profile">Business Profile</button>
+              <button class="nav-subitem" data-view="businessAdmin" data-subkey="businessAdminSection" data-subvalue="branches">Branches</button>
+              <button class="nav-subitem" data-view="businessAdmin" data-subkey="businessAdminSection" data-subvalue="users">Users & Roles</button>
+              <button class="nav-subitem" data-view="businessAdmin" data-subkey="businessAdminSection" data-subvalue="permissions">Permissions</button>
+              <button class="nav-subitem" data-view="businessAdmin" data-subkey="businessAdminSection" data-subvalue="audit">Audit Logs</button>
+            </div>
+          </div>
+
+          <div class="nav-group" data-menu-group="master">
+            <button class="nav-item nav-parent" data-view="master" data-menu="master" aria-expanded="false">Master Data</button>
+            <div class="nav-submenu" data-submenu="master" hidden>
+              <button class="nav-subitem" data-view="master" data-subkey="masterFocus" data-subvalue="employee">Employees</button>
+              <button class="nav-subitem" data-view="master" data-subkey="masterFocus" data-subvalue="package">Packages</button>
+              <button class="nav-subitem" data-view="master" data-subkey="masterFocus" data-subvalue="category">Categories</button>
+              <button class="nav-subitem" data-view="master" data-subkey="masterFocus" data-subvalue="expense">Expense Categories</button>
+              <button class="nav-subitem" data-view="master" data-subkey="masterFocus" data-subvalue="action">Actions</button>
+            </div>
+          </div>
+
+          <div class="nav-group" data-menu-group="reports">
+            <button class="nav-item nav-parent" data-view="reports" data-menu="reports" aria-expanded="false">Reports</button>
+            <div class="nav-submenu" data-submenu="reports" hidden>
+              <button class="nav-subitem" data-view="reports" data-subkey="reportType" data-subvalue="Outstanding Report">Outstanding Report</button>
+              <button class="nav-subitem" data-view="reports" data-subkey="reportType" data-subvalue="Income Statement per Job Card">Income Statement</button>
+              <button class="nav-subitem" data-view="reports" data-subkey="reportType" data-subvalue="Commission Report">Commission Report</button>
+              <button class="nav-subitem" data-view="reports" data-subkey="reportType" data-subvalue="Payment Report">Payment Report</button>
+            </div>
+          </div>
+
+          <div class="nav-group" data-menu-group="analysis">
+            <button class="nav-item nav-parent" data-view="analysis" data-menu="analysis" aria-expanded="false">Analysis</button>
+            <div class="nav-submenu" data-submenu="analysis" hidden>
+              <button class="nav-subitem" data-view="analysis" data-subkey="analysisView" data-subvalue="Current View">Current View</button>
+              <button class="nav-subitem" data-view="analysis" data-subkey="analysisView" data-subvalue="Bar Chart">Bar Chart</button>
+              <button class="nav-subitem" data-view="analysis" data-subkey="analysisView" data-subvalue="Pie Chart">Pie Chart</button>
+            </div>
+          </div>
+
+          <div class="nav-group" data-menu-group="license">
+            <button class="nav-item nav-parent" data-view="license" data-menu="license" aria-expanded="false">License</button>
+            <div class="nav-submenu" data-submenu="license" hidden>
+              <button class="nav-subitem" data-view="license" data-subkey="licenseScreen" data-subvalue="status">License Status</button>
+              <button class="nav-subitem" data-view="license" data-subkey="licenseScreen" data-subvalue="request">Generate Request Code</button>
+              <button class="nav-subitem" data-view="license" data-subkey="licenseScreen" data-subvalue="activate">Enter Activation Code</button>
+              <button class="nav-subitem" data-view="license" data-subkey="licenseScreen" data-subvalue="records">License Records</button>
+            </div>
+          </div>
+
+          <div class="nav-group" data-menu-group="security">
+            <button class="nav-item nav-parent" data-view="security" data-menu="security" aria-expanded="false">Security</button>
+            <div class="nav-submenu" data-submenu="security" hidden>
+              <button class="nav-subitem" data-view="security" data-subkey="securitySection" data-subvalue="access">Access Control</button>
+              <button class="nav-subitem" data-view="security" data-subkey="securitySection" data-subvalue="features">Security Features</button>
+            </div>
+          </div>
+
+          <div class="nav-group" data-menu-group="settings">
+            <button class="nav-item nav-parent" data-view="settings" data-menu="settings" aria-expanded="false">Settings</button>
+            <div class="nav-submenu" data-submenu="settings" hidden>
+              <button class="nav-subitem" data-view="settings" data-subkey="settingsSection" data-subvalue="business">Business Setup</button>
+              <button class="nav-subitem" data-view="settings" data-subkey="settingsSection" data-subvalue="theme">Theme</button>
+              <button class="nav-subitem" data-view="settings" data-subkey="settingsSection" data-subvalue="language">Language</button>
+              <button class="nav-subitem" data-view="settings" data-subkey="settingsSection" data-subvalue="pages">Page Setup</button>
+              <button class="nav-subitem" data-view="settings" data-subkey="settingsSection" data-subvalue="tools">App Tools</button>
+              <button class="nav-subitem" data-view="settings" data-subkey="settingsSection" data-subvalue="about">About the App</button>
+            </div>
+          </div>
+        </nav>
+      </aside>
+
+      <main class="workspace">
+        <header class="topbar">
+          <button id="menuToggle" class="menu-toggle" type="button" aria-label="Open menu" aria-controls="sidebar" aria-expanded="false">
+            <span></span><span></span><span></span>
+          </button>
+          <div class="topbar-title">
+            <div id="dashboardTopNames" class="dashboard-top-names" hidden></div>
+            <h1 id="viewTitle">Dashboard</h1>
+          </div>
+          <div class="top-actions">
+            <!-- Add user info and logout button in topbar for mobile -->
+            <div class="top-user-info" id="topUserInfo">
+              <span class="top-user-name" id="topUserName"></span>
+              <button type="button" class="top-dev-btn" onclick="switchDeveloperMode()" title="Developer Mode">Edit Mode</button>
+              <button onclick="logout()" class="top-logout-btn" title="Logout" aria-label="Logout">⏻</button>
+            </div>
+          </div>
+        </header>
+
+        <section id="dashboard" class="view active"></section>
+        <section id="customers" class="view"></section>
+        <section id="jobs" class="view"></section>
+        <section id="confirmation" class="view"></section>
+        <section id="serviceCards" class="view"></section>
+        <section id="payments" class="view"></section>
+        <section id="expenses" class="view"></section>
+        <section id="commissions" class="view"></section>
+        <section id="admin" class="view"></section>
+        <section id="businessAdmin" class="view"></section>
+        <section id="master" class="view"></section>
+        <section id="reports" class="view"></section>
+        <section id="analysis" class="view"></section>
+        <section id="license" class="view"></section>
+        <section id="security" class="view"></section>
+        <section id="settings" class="view"></section>
+      </main>
+    </div>
+    <div id="sidebarOverlay" class="sidebar-overlay" hidden></div>
+    <div id="securityLock" class="security-lock" hidden>
+      <form id="securityUnlockForm" class="security-lock-card">
+        <div class="brand-mark"><img src="icon.svg" alt="" class="brand-car-icon" /></div>
+        <h2>VASMA System Locked</h2>
+        <p class="muted">Enter your password or PIN to continue.</p>
+        <label>Password / PIN<input id="securityUnlockPassword" type="password" autocomplete="current-password" required></label>
+        <button class="primary">Unlock App</button>
+        <p id="securityUnlockError" class="security-error" aria-live="polite"></p>
+      </form>
+    </div>
+
+    <dialog id="modal">
+      <form method="dialog">
+        <button class="icon close-modal" value="cancel" aria-label="Close">x</button>
+      </form>
+      <div id="modalBody"></div>
+    </dialog>
+
+    <div id="toast" role="status" aria-live="polite"></div>
+    <button id="backDashboard" class="back-dashboard" type="button" aria-label="Back to dashboard">Dashboard</button>
+    
+    <!-- Scripts -->
+    <script src="logout.js"></script>
+    <script src="app.js?v=107"></script>
+    
+    <!-- Additional script to display user info -->
+    <script>
+      (function displayUserInfo() {
+        try {
+          const userData = window.currentUser || JSON.parse(localStorage.getItem('vasma_user') || '{}');
+          const userName = userData.name || userData.username || 'User';
+          const userRole = userData.role || 'staff';
+          const topUserName = document.getElementById('topUserName');
+          
+          if (topUserName) topUserName.textContent = userName;
+          
+          // Update brand business name if available from settings
+          if (userData.businessName) {
+            const brandBusinessName = document.getElementById('brandBusinessName');
+            if (brandBusinessName) brandBusinessName.textContent = userData.businessName;
+          }
+        } catch (e) {
+          console.error('Error displaying user info:', e);
+        }
+      })();
+    </script>
+  </body>
+</html>

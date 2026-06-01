@@ -1,0 +1,20 @@
+{
+  "name": "vasma-system-backend",
+  "version": "1.0.0",
+  "description": "Production MySQL backend API for VASMA System",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "check": "node --check server.js && node --check routes/auth.js && node --check routes/data.js && node --check routes/admin.js && node --check routes/public.js && node --check db/mysql.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.18.3",
+    "jsonwebtoken": "^9.0.2",
+    "mysql2": "^3.11.5"
+  }
+}
