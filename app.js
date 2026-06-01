@@ -2127,13 +2127,19 @@ function serviceCardLine(job, item) {
 }
 
 function isServiceCardCategory(name) {
-  return ["general service", "tire service"].includes(String(name || "").toLowerCase());
+  return String(name || "").toLowerCase() === "general service";
 }
 
 function serviceCardSelectableItems() {
   return state.categories
     .filter((category) => isServiceCardCategory(category.name) && isCategoryServiceEnabled(category))
-    .flatMap((category) => category.items.map((item) => ({ id: `${category.id}:${item.id}`, name: item.name })));
+    .flatMap((category) => category.items.map((item) => ({ id: `${category.id}:${item.id}`, categoryId: category.id, itemId: item.id, name: item.name })));
+}
+
+function serviceCardItemOptions(selectedName = "") {
+  return serviceCardSelectableItems()
+    .map((item) => `<option value="${escapeAttr(item.name)}" ${item.name === selectedName ? "selected" : ""}>${escapeHtml(item.name)}</option>`)
+    .join("");
 }
 
 function serviceCardBaseItems(job) {
@@ -2142,6 +2148,7 @@ function serviceCardBaseItems(job) {
 
 function serviceCardRows(job) {
   const saved = job.serviceCard?.lines || [];
+  const selectableNames = new Set(serviceCardSelectableItems().map((item) => item.name));
   if (saved.length) {
     return saved.map((line) => ({
       id: line.id || line.jobItemId || uid(),
@@ -2149,7 +2156,7 @@ function serviceCardRows(job) {
       itemName: line.itemName || itemName(byId(tableRows(job.items), line.jobItemId)?.categoryId || "", byId(tableRows(job.items), line.jobItemId)?.itemId || ""),
       checked: Boolean(line.checked ?? line.done),
       remarks: line.remarks || ""
-    }));
+    })).filter((line) => selectableNames.has(line.itemName));
   }
   return serviceCardBaseItems(job).map((item) => ({
     id: item.id,
@@ -2214,7 +2221,7 @@ function showServiceCardJob(jobId) {
         </div>
       </div>
       <div class="service-add-row">
-        <label>Service Item<select id="serviceCardItemSelect">${selectable.map((item) => `<option value="${escapeAttr(item.name)}">${escapeHtml(item.name)}</option>`).join("")}</select></label>
+        <label>Service Item<select id="serviceCardItemSelect"><option value="">Select general service item...</option>${selectable.map((item) => `<option value="${escapeAttr(item.name)}">${escapeHtml(item.name)}</option>`).join("")}</select></label>
         <button type="button" class="secondary" id="addServiceCardLine">Add Service Item</button>
       </div>
       <div class="table-wrap">
@@ -2248,7 +2255,7 @@ function showServiceCardJob(jobId) {
 
 function serviceCardRowMarkup(line) {
   return `<tr data-service-card-line="${escapeAttr(line.id || uid())}">
-    <td><input name="itemName" value="${escapeAttr(line.itemName || "")}"></td>
+    <td><select name="itemName" required><option value="">Select general service item...</option>${serviceCardItemOptions(line.itemName || "")}</select></td>
     <td><input class="small-check" type="checkbox" name="checked" ${line.checked ? "checked" : ""}></td>
     <td><input name="remarks" value="${escapeAttr(line.remarks || "")}" placeholder="Optional"></td>
     <td><button type="button" class="danger icon" onclick="this.closest('tr').remove()" aria-label="Remove">x</button></td>
@@ -2259,6 +2266,7 @@ function saveServiceCard(jobId) {
   const job = byId(state.jobCards, jobId);
   const form = document.querySelector("#serviceCardForm");
   const data = formData(form);
+  const selectableNames = new Set(serviceCardSelectableItems().map((item) => item.name));
   job.serviceCard = {
     serviceMileage: parseMoney(data.serviceMileage || job.mileage),
     nextServiceMileage: parseMoney(data.nextServiceMileage),
@@ -2270,7 +2278,7 @@ function saveServiceCard(jobId) {
       checked: row.querySelector("[name=checked]").checked,
       done: row.querySelector("[name=checked]").checked,
       remarks: row.querySelector("[name=remarks]").value
-    })).filter((line) => line.itemName)
+    })).filter((line) => selectableNames.has(line.itemName))
   };
   save();
   renderAll();
