@@ -2,849 +2,718 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>VASMA System | Packages & Registration</title>
-  <!-- Google Fonts + simple smooth reset -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VASMA System | Packages</title>
   <style>
     * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
     }
 
     body {
-      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
-      background: #f4f7fc;
-      color: #1a2c3e;
-      line-height: 1.4;
-      scroll-behavior: smooth;
+      min-height: 100vh;
+      background: #f3f7fc;
+      color: #082f49;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 12px;
     }
 
-    /* header */
     header {
-      background: white;
-      backdrop-filter: blur(0px);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.02), 0 2px 6px rgba(0,0,0,0.05);
-      padding: 1rem 2rem;
+      height: 36px;
+      background: #ffffff;
+      border-bottom: 1px solid #cdd8e4;
+      box-shadow: 0 2px 8px rgba(15, 35, 55, 0.12);
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      flex-wrap: wrap;
-      border-bottom: 1px solid #e2edf2;
+      justify-content: space-between;
+      padding: 0 22px;
     }
 
-    header div strong {
-      font-size: 1.5rem;
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      white-space: nowrap;
+    }
+
+    .brand strong {
+      font-size: 13px;
+      color: #08364f;
+      font-weight: 800;
+    }
+
+    .brand span {
+      border-left: 1px solid #90a9bd;
+      color: #1f5c78;
+      font-size: 7px;
       font-weight: 700;
-      background: linear-gradient(135deg, #0f2b3d, #1b4a6e);
-      background-clip: text;
-      -webkit-background-clip: text;
-      color: transparent;
-      letter-spacing: -0.3px;
+      padding-left: 10px;
     }
 
-    header div span {
-      margin-left: 0.75rem;
-      font-size: 0.85rem;
-      font-weight: 500;
-      color: #4a6f8a;
-      border-left: 2px solid #cbdbe6;
-      padding-left: 0.75rem;
-    }
-
-    header a {
-      background: #0f2b3d;
-      color: white;
-      text-decoration: none;
-      padding: 0.55rem 1.4rem;
-      border-radius: 60px;
-      font-weight: 600;
-      font-size: 0.9rem;
-      transition: all 0.2s ease;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    }
-
-    header a:hover {
-      background: #1e4a6e;
-      transform: scale(0.97);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-
-    /* main container */
     main {
-      max-width: 1280px;
+      width: min(100%, 1050px);
       margin: 0 auto;
-      padding: 2rem 1.5rem 4rem;
-    }
-
-    /* hero section */
-    .hero {
+      padding: 30px 16px 70px;
       text-align: center;
-      margin-bottom: 3rem;
     }
 
     .hero h1 {
-      font-size: 3.2rem;
+      color: #0a415d;
+      font-size: 31px;
       font-weight: 800;
-      background: linear-gradient(125deg, #0b2b3f, #1f6e8c);
-      background-clip: text;
-      -webkit-background-clip: text;
-      color: transparent;
-      letter-spacing: -1px;
+      line-height: 1.1;
+      margin-bottom: 16px;
     }
 
     .hero p {
-      font-size: 1.2rem;
-      color: #2c5368;
-      margin-top: 0.75rem;
-      font-weight: 500;
+      color: #0b3850;
+      font-size: 10px;
+      font-weight: 600;
+      margin-bottom: 32px;
     }
 
-    /* packages grid */
-    .packages {
+    .section-title {
+      align-items: center;
+      color: #062d44;
       display: flex;
-      flex-wrap: wrap;
-      gap: 2rem;
+      font-size: 17px;
+      font-weight: 800;
+      gap: 8px;
       justify-content: center;
-      margin: 2rem 0 2rem;
+      margin-bottom: 28px;
+    }
+
+    .packages {
+      display: grid;
+      gap: 22px;
+      grid-template-columns: repeat(auto-fit, 220px);
+      justify-content: center;
+      margin: 0 auto 48px;
+      max-width: 980px;
+      text-align: left;
+    }
+
+    .package-tabs {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 10px;
+      justify-content: center;
+      margin: -8px auto 24px;
+      max-width: 100%;
+      overflow-x: auto;
+      padding-bottom: 3px;
+    }
+
+    .package-tab {
+      flex: 0 0 auto;
+      background: #ffffff;
+      border: 1px solid #b9cfdd;
+      border-radius: 999px;
+      color: #0b415c;
+      cursor: pointer;
+      font-size: 10px;
+      font-weight: 900;
+      padding: 9px 17px;
+      transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+    }
+
+    .package-tab.active {
+      background: #0d6e91;
+      border-color: #0d6e91;
+      color: #ffffff;
     }
 
     .package-card {
-      background: white;
-      border-radius: 2rem;
-      flex: 1;
-      min-width: 260px;
-      max-width: 340px;
-      padding: 1.8rem 1.5rem 2rem;
-      transition: all 0.25s ease;
-      box-shadow: 0 15px 35px -12px rgba(0,0,0,0.1);
-      border: 1px solid rgba(144, 187, 207, 0.3);
-      cursor: pointer;
-      position: relative;
-    }
-
-    .package-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 25px 40px -14px rgba(0, 32, 54, 0.2);
-      border-color: #9ac2d4;
+      background: #ffffff;
+      border: 1px solid #cddce8;
+      border-radius: 15px;
+      box-shadow: 0 11px 26px rgba(27, 50, 70, 0.08);
+      min-height: 204px;
+      padding: 22px 16px 18px;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+      width: 220px;
     }
 
     .package-card.selected {
-      border: 2px solid #1e6f5c;
-      background: #fefef7;
-      box-shadow: 0 20px 30px -12px rgba(30,111,92,0.2);
+      background: #fffef6;
+      border: 2px solid #00715c;
+      box-shadow: 0 12px 28px rgba(0, 113, 92, 0.13);
     }
 
-    .package-badge {
-      display: inline-block;
-      background: #eef3f7;
-      padding: 0.25rem 0.9rem;
-      border-radius: 50px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: #1c6d4c;
-      margin-bottom: 1.2rem;
-      letter-spacing: 0.3px;
-    }
-
-    .package-card h3 {
-      font-size: 1.8rem;
-      font-weight: 700;
-      margin-bottom: 0.75rem;
-      color: #0e2f40;
-    }
-
-    .price {
-      font-size: 1.7rem;
-      font-weight: 800;
-      color: #1f6e8c;
-      margin: 0.75rem 0 1rem;
-      display: flex;
-      align-items: baseline;
-      gap: 0.25rem;
-      flex-wrap: wrap;
-    }
-
-    .price small {
-      font-size: 0.85rem;
-      font-weight: 500;
-      color: #5c7e94;
-    }
-
-    .currency-note {
-      font-size: 0.7rem;
-      font-weight: 400;
-      background: #eef2f5;
-      display: inline-block;
-      padding: 0.2rem 0.5rem;
-      border-radius: 20px;
-      margin-left: 0.5rem;
-      color: #2c5a6e;
-    }
-
-    .features-list {
-      list-style: none;
-      margin: 1.2rem 0;
-    }
-
-    .features-list li {
-      padding: 0.45rem 0;
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      font-size: 0.9rem;
-      font-weight: 500;
-      color: #254e64;
-      border-bottom: 1px dashed #e2edf2;
-    }
-
-    .features-list li::before {
-      content: "✓";
-      color: #1e8f6e;
-      font-weight: 800;
-      background: #e0f0ea;
-      width: 20px;
-      height: 20px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 30px;
-      font-size: 0.8rem;
-    }
-
-    .select-btn {
-      margin-top: 1rem;
-      background: #eef2f5;
-      border: none;
-      width: 100%;
-      padding: 0.7rem;
-      border-radius: 60px;
-      font-weight: 600;
-      font-size: 0.9rem;
-      color: #1a4c68;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-
-    .package-card.selected .select-btn {
-      background: #1f6e8c;
-      color: white;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-
-    /* How It Works Section */
-    .how-it-works {
-      margin: 4rem 0 3rem;
-      text-align: center;
-    }
-
-    .how-it-works h2 {
-      font-size: 2rem;
-      font-weight: 700;
-      color: #0f2b3d;
-      margin-bottom: 2rem;
-      position: relative;
-      display: inline-block;
-    }
-
-    .how-it-works h2:after {
-      content: '';
-      position: absolute;
-      bottom: -10px;
-      left: 20%;
-      width: 60%;
-      height: 3px;
-      background: linear-gradient(90deg, #1f6e8c, #9ac2d4);
-      border-radius: 3px;
-    }
-
-    .steps-container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 2rem;
-      justify-content: center;
-      margin-top: 1.5rem;
-    }
-
-    .step-card {
-      background: white;
-      border-radius: 1.8rem;
-      padding: 2rem 1.5rem;
-      flex: 1;
-      min-width: 220px;
-      max-width: 300px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-      transition: all 0.3s ease;
-      border: 1px solid #e2edf2;
-    }
-
-    .step-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 20px 30px -12px rgba(31,110,140,0.15);
-      border-color: #c2dfea;
-    }
-
-    .step-number {
-      width: 56px;
-      height: 56px;
-      background: linear-gradient(135deg, #1f6e8c, #0f4b62);
-      color: white;
-      font-size: 1.8rem;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 60px;
-      margin: 0 auto 1.2rem;
-      box-shadow: 0 8px 14px rgba(0,0,0,0.1);
-    }
-
-    .step-card h3 {
-      font-size: 1.4rem;
-      font-weight: 700;
-      margin-bottom: 0.8rem;
-      color: #1a4c68;
-    }
-
-    .step-card p {
-      font-size: 0.95rem;
-      color: #2c5a6e;
-      line-height: 1.5;
-    }
-
-    /* register section */
-    .register {
-      background: white;
-      border-radius: 2rem;
-      padding: 2rem 2rem 2.5rem;
-      margin-top: 2.5rem;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05);
-      border: 1px solid #dde9ef;
-    }
-
-    .register h2 {
-      font-size: 1.8rem;
-      font-weight: 700;
-      margin-bottom: 0.25rem;
-      color: #0f2b3d;
-    }
-
-    form {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.2rem 1.5rem;
-      margin-top: 1.8rem;
-    }
-
-    form label {
-      display: flex;
-      flex-direction: column;
-      font-weight: 600;
-      font-size: 0.85rem;
-      color: #1f5370;
-      gap: 0.4rem;
-    }
-
-    form input, form select {
-      padding: 0.8rem 1rem;
-      border-radius: 1rem;
-      border: 1px solid #cbdbe0;
-      font-family: 'Inter', sans-serif;
-      font-size: 0.9rem;
-      background: #fefefe;
-      transition: 0.2s;
-    }
-
-    form input:focus, form select:focus {
-      border-color: #1f6e8c;
-      outline: none;
-      box-shadow: 0 0 0 3px rgba(31,110,140,0.2);
-    }
-
-    button[type="submit"] {
-      grid-column: 1 / -1;
-      background: #1b4a6e;
-      color: white;
-      border: none;
-      padding: 1rem;
-      font-weight: 700;
-      font-size: 1rem;
-      border-radius: 2rem;
-      cursor: pointer;
-      transition: all 0.2s;
-      margin-top: 0.5rem;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-    }
-
-    button[type="submit"]:hover {
-      background: #0f3b57;
+    .package-card:hover {
       transform: translateY(-2px);
     }
 
-    .result {
-      margin-top: 1.5rem;
-      background: #e7f3f0;
-      padding: 1rem 1.4rem;
-      border-radius: 1.5rem;
-      border-left: 5px solid #1f6e8c;
-      font-weight: 500;
-      color: #11543f;
+    .badge {
+      background: #edf7fb;
+      border-radius: 999px;
+      color: #1b708c;
+      display: inline-block;
+      font-size: 6px;
+      font-weight: 800;
+      margin-bottom: 20px;
+      padding: 4px 8px;
     }
 
-    /* responsive touches */
-    @media (max-width: 700px) {
-      main {
-        padding: 1rem;
-      }
-      .hero h1 {
-        font-size: 2.4rem;
-      }
-      .register {
-        padding: 1.5rem;
-      }
-      header div span {
-        display: block;
-        margin-left: 0;
-        border-left: none;
-        padding-left: 0;
-        margin-top: 0.2rem;
-      }
+    .package-card h3 {
+      color: #062d44;
+      font-size: 15px;
+      font-weight: 800;
+      margin-bottom: 9px;
+    }
+
+    .price {
+      align-items: baseline;
+      color: #0c7194;
+      display: flex;
+      flex-wrap: wrap;
+      font-size: 16px;
+      font-weight: 900;
+      gap: 3px;
+      margin-bottom: 4px;
+    }
+
+    .price small {
+      color: #5c7c90;
+      font-size: 6px;
+      font-weight: 700;
+    }
+
+    .tax-note {
+      color: #5b6f7c;
+      display: block;
+      font-size: 5px;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    .features {
+      list-style: none;
+      margin-bottom: 23px;
+    }
+
+    .features li {
+      align-items: center;
+      border-bottom: 1px dashed #d4e2eb;
+      color: #133f56;
+      display: flex;
+      font-size: 6px;
+      font-weight: 800;
+      gap: 8px;
+      padding: 6px 0;
+    }
+
+    .features li::before {
+      align-items: center;
+      background: #e2f3ed;
+      border-radius: 50%;
+      color: #198f6d;
+      content: "✓";
+      display: inline-flex;
+      flex: 0 0 10px;
+      font-size: 7px;
+      font-weight: 900;
+      height: 10px;
+      justify-content: center;
+      width: 10px;
+    }
+
+    .select-btn {
+      background: #ecf1f5;
+      border: 0;
+      border-radius: 999px;
+      color: #062d44;
+      cursor: pointer;
+      font-size: 6px;
+      font-weight: 900;
+      height: 26px;
+      width: 100%;
+    }
+
+    .selected .select-btn {
+      background: #0d6e91;
+      color: #ffffff;
+    }
+
+    .how-title {
+      margin-bottom: 28px;
+      text-decoration: underline;
+      text-underline-offset: 5px;
+    }
+
+    .steps {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: repeat(4, 1fr);
+      margin: 0 auto 36px;
+      max-width: 740px;
+    }
+
+    .step {
+      background: #ffffff;
+      border: 1px solid #d8e2eb;
+      border-radius: 13px;
+      box-shadow: 0 10px 20px rgba(31, 51, 71, 0.06);
+      min-height: 112px;
+      padding: 18px 13px 12px;
+    }
+
+    .step-number {
+      align-items: center;
+      background: #116d8f;
+      border-radius: 50%;
+      color: #ffffff;
+      display: inline-flex;
+      font-size: 13px;
+      font-weight: 900;
+      height: 32px;
+      justify-content: center;
+      margin-bottom: 16px;
+      width: 32px;
+    }
+
+    .step h3 {
+      color: #08364f;
+      font-size: 11px;
+      font-weight: 900;
+      margin-bottom: 9px;
+    }
+
+    .step p {
+      color: #234f65;
+      font-size: 6px;
+      font-weight: 700;
+      line-height: 1.45;
+    }
+
+    .register {
+      background: #ffffff;
+      border: 1px solid #d8e2eb;
+      border-radius: 15px;
+      box-shadow: 0 12px 28px rgba(31, 51, 71, 0.08);
+      margin: 0 auto;
+      max-width: 740px;
+      padding: 23px 21px 22px;
+      text-align: left;
+    }
+
+    .register h2 {
+      color: #052d44;
+      font-size: 17px;
+      font-weight: 900;
+      margin-bottom: 23px;
+    }
+
+    .form-grid {
+      display: grid;
+      gap: 14px 17px;
+      grid-template-columns: 1.2fr 1fr 1fr;
+    }
+
+    label {
+      color: #17617c;
+      display: block;
+      font-size: 7px;
+      font-weight: 900;
+    }
+
+    input,
+    select {
+      appearance: none;
+      background: #ffffff;
+      border: 1px solid #90b4c9;
+      border-radius: 7px;
+      color: #062d44;
+      display: block;
+      font-size: 8px;
+      height: 28px;
+      margin-top: 6px;
+      padding: 0 11px;
+      width: 100%;
+    }
+
+    select {
+      background-image:
+        linear-gradient(45deg, transparent 50%, #052d44 50%),
+        linear-gradient(135deg, #052d44 50%, transparent 50%);
+      background-position:
+        calc(100% - 18px) 12px,
+        calc(100% - 12px) 12px;
+      background-size: 7px 7px, 7px 7px;
+      background-repeat: no-repeat;
+      padding-right: 34px;
+    }
+
+    .submit-btn {
+      background: #174f74;
+      border: 0;
+      border-radius: 999px;
+      color: #ffffff;
+      cursor: pointer;
+      font-size: 8px;
+      font-weight: 900;
+      grid-column: 1 / -1;
+      height: 32px;
+      margin-top: 6px;
+      width: 100%;
+    }
+
+    .result {
+      background: #eaf7f2;
+      border: 1px solid #8dcbb8;
+      border-radius: 10px;
+      color: #0a4b3d;
+      font-size: 10px;
+      font-weight: 700;
+      line-height: 1.6;
+      margin-top: 16px;
+      padding: 12px;
+    }
+
+    @media (max-width: 760px) {
       header {
+        height: auto;
+        gap: 10px;
+        padding: 12px 16px;
+      }
+
+      .brand {
+        align-items: flex-start;
         flex-direction: column;
-        gap: 12px;
-        text-align: center;
+        gap: 4px;
       }
-      .step-card {
-        max-width: 100%;
+
+      .brand span {
+        border-left: 0;
+        padding-left: 0;
       }
-      .price {
-        font-size: 1.4rem;
+
+      .steps,
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .register {
+        max-width: 360px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .packages {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .package-card {
+        width: 100%;
       }
     }
   </style>
 </head>
 <body>
   <header>
-    <div>
+    <div class="brand">
       <strong>VASMA System</strong>
       <span>Vehicle Auto Service Management System</span>
     </div>
-    <a href="../login.html">Login</a>
   </header>
+
   <main>
     <section class="hero">
-      <h1 id="landingTitle">VASMA System</h1>
-      <p id="landingSubtitle">Choose your package and register your business.</p>
+      <h1>VASMA System</h1>
+      <p>Packages built for car wash, service stations &amp; full garages</p>
     </section>
 
-    <section>
-      <h2 style="text-align: center; font-size: 1.8rem; margin-bottom: 1rem;">⚙️ Tailored Packages</h2>
-      <div id="packages" class="packages"></div>
+    <section aria-labelledby="packageTitle">
+      <h2 class="section-title" id="packageTitle">⚙ Tailored Packages</h2>
+      <div class="package-tabs" role="tablist" aria-label="Package groups">
+        <button class="package-tab active" type="button" data-group="single">Single Package 3</button>
+        <button class="package-tab" type="button" data-group="combo">Combo Package 3</button>
+        <button class="package-tab" type="button" data-group="full">Full Package 1</button>
+      </div>
+      <div class="packages" id="packageCards"></div>
     </section>
 
-    <!-- "HOW IT WORKS" SECTION -->
-    <section class="how-it-works">
-      <h2>📌 How It Works</h2>
-      <div class="steps-container">
-        <div class="step-card">
+    <section aria-labelledby="howTitle">
+      <h2 class="section-title how-title" id="howTitle">📌 How It Works</h2>
+      <div class="steps">
+        <article class="step">
           <div class="step-number">1</div>
           <h3>Choose Package</h3>
-          <p>Select the plan that fits your business — Startup (Car Wash), Combo (Wash + Services), or Premium (Full Garage).</p>
-        </div>
-        <div class="step-card">
+          <p>Select the plan that fits your business - Startup (Car Wash), Combo (Wash + Services), or Premium (Full Garage).</p>
+        </article>
+        <article class="step">
           <div class="step-number">2</div>
           <h3>Register Business</h3>
-          <p>Fill in your business & owner details, set a secure PIN, and submit your registration in seconds.</p>
-        </div>
-        <div class="step-card">
+          <p>Fill in your business &amp; owner details, set a secure PIN, and submit your registration in seconds.</p>
+        </article>
+        <article class="step">
           <div class="step-number">3</div>
           <h3>Get Business Code</h3>
           <p>Receive a unique business code instantly. Use it along with your PIN to access the VASMA dashboard and manage operations.</p>
-        </div>
-        <div class="step-card">
+        </article>
+        <article class="step">
           <div class="step-number">4</div>
           <h3>Start Managing</h3>
-          <p>Track customers, services, inventory, and garage workflows — everything unified in one powerful system.</p>
-        </div>
+          <p>Track customers, services, inventory, and garage workflows - everything unified in one powerful system.</p>
+        </article>
       </div>
     </section>
 
-    <section class="register">
-      <h2>📋 Register Business</h2>
+    <section class="register" aria-labelledby="registerTitle">
+      <h2 id="registerTitle">📋 Register Business</h2>
       <form id="registerForm">
-        <label>Selected Package
-          <select name="planId" id="packageSelect" required></select>
-        </label>
-        <label>Business Name
-          <input name="businessName" required placeholder="e.g., Fuad Auto Service">
-        </label>
-        <label>Owner Name
-          <input name="ownerName" required placeholder="Full name">
-        </label>
-        <label>Mobile Number
-          <input name="mobile" required placeholder="+255 xxx xxx xxx">
-        </label>
-        <label>Location
-          <input name="location" placeholder="Street, city, area">
-        </label>
-        <label>New PIN (min 4 digits)
-          <input name="pin" type="password" required minlength="4" maxlength="8" placeholder="Create PIN">
-        </label>
-        <button type="submit">🚀 Register and Get Business Code</button>
+        <div class="form-grid">
+          <label>
+            Selected Package
+            <input id="packageDisplay" type="text" readonly />
+            <input id="packageSelect" name="planId" type="hidden" required />
+          </label>
+          <label>
+            Business Name
+            <input name="businessName" placeholder="e.g., Fuad Auto Service" required />
+          </label>
+          <label>
+            Owner Name
+            <input name="ownerName" placeholder="Full name" required />
+          </label>
+          <label>
+            Mobile Number
+            <input name="mobile" placeholder="+255 xxx xxx xxx" required />
+          </label>
+          <label>
+            Location
+            <input name="location" placeholder="Street, city, area" />
+          </label>
+          <label>
+            New PIN (min 4 digits)
+            <input name="pin" type="password" minlength="4" placeholder="Create PIN" required />
+          </label>
+          <button class="submit-btn" type="submit">🚀 Register and Get Business Code</button>
+        </div>
       </form>
-      <div id="result" class="result" hidden></div>
+      <div class="result" id="result" hidden></div>
     </section>
   </main>
 
   <script>
-    // ---------- PACKAGE DEFINITIONS WITH TANZANIAN SHILLINGS (TZS) ----------
-    const PACKAGES = [
-      {
-        id: "pkg_startup",
-        name: "Startup Package",
-        tag: "Car Wash Focus",
-        description: "Ideal for business owners focusing on premium car wash.",
-        price: "25,000",
-        currency: "TZS",
-        period: "/ month",
-        features: [
-          "Unlimited car wash tickets",
-          "Customer loyalty tracker",
-          "Basic wash analytics",
-          "Staff schedule (up to 3)"
-        ],
-        type: "startup"
-      },
-      {
-        id: "pkg_combo",
-        name: "Combo Package",
-        tag: "Car Wash + Services",
-        description: "Oil change, tire alignment, waxing, air filling & more.",
-        price: "35,000",
-        currency: "TZS",
-        period: "/ month",
-        features: [
-          "All Startup features",
-          "Service orders (oil, alignment, waxing)",
-          "Inventory for oils & filters",
-          "Customer vehicle history",
-          "Digital checklists"
-        ],
-        type: "combo"
-      },
-      {
-        id: "pkg_premium",
-        name: "Premium Package",
-        tag: "Full Garage Suite",
-        description: "Car wash + full services + garage & repair management.",
-        price: "50,000",
-        currency: "TZS",
-        period: "/ month",
-        features: [
-          "All Combo features",
-          "Garage repair workflow",
-          "Mechanic assignment & tasks",
-          "Parts ordering & inventory",
-          "Advanced financial reports",
-          "Multi-branch support"
-        ],
-        type: "premium"
-      }
+    const fallbackPackages = [
+      { id: "plan_tire_monthly", plan_code: "VASMA-1-MONTHLY", plan_name: "Tyre Service Only", billing_period: "MONTHLY", duration_days: 30, branch_limit: 1, price: "0.00", services: ["tire"] },
+      { id: "plan_carwash_monthly", plan_code: "VASMA-2-MONTHLY", plan_name: "Car Wash Only", billing_period: "MONTHLY", duration_days: 30, branch_limit: 1, price: "0.00", services: ["carWash"] },
+      { id: "plan_general_monthly", plan_code: "VASMA-3-MONTHLY", plan_name: "General Service Only", billing_period: "MONTHLY", duration_days: 30, branch_limit: 1, price: "0.00", services: ["general"] },
+      { id: "plan_tire_carwash_monthly", plan_code: "VASMA-12-MONTHLY", plan_name: "Tyre Service + Car Wash", billing_period: "MONTHLY", duration_days: 30, branch_limit: 1, price: "0.00", services: ["tire", "carWash"] },
+      { id: "plan_tire_general_monthly", plan_code: "VASMA-13-MONTHLY", plan_name: "Tyre Service + General Service", billing_period: "MONTHLY", duration_days: 30, branch_limit: 1, price: "0.00", services: ["tire", "general"] },
+      { id: "plan_carwash_general_monthly", plan_code: "VASMA-23-MONTHLY", plan_name: "Car Wash + General Service", billing_period: "MONTHLY", duration_days: 30, branch_limit: 1, price: "0.00", services: ["carWash", "general"] },
+      { id: "plan_full_monthly", plan_code: "VASMA-123-MONTHLY", plan_name: "Full Service Package", billing_period: "MONTHLY", duration_days: 30, branch_limit: 1, price: "0.00", services: ["tire", "carWash", "general"] }
     ];
 
-    // Helper: render package cards and populate select dropdown
-    function renderPackages() {
-      const container = document.getElementById('packages');
-      const selectEl = document.getElementById('packageSelect');
-      if (!container) return;
-      
-      // Clear existing
-      container.innerHTML = '';
-      selectEl.innerHTML = '';
+    const serviceLabels = {
+      tire: "Tyre Service",
+      carWash: "Car Wash",
+      general: "General Service"
+    };
 
-      // Build cards and options
-      PACKAGES.forEach((pkg, idx) => {
-        // --- Card ---
-        const card = document.createElement('div');
-        card.className = 'package-card';
-        card.dataset.pkgId = pkg.id;
-        
-        const badge = document.createElement('div');
-        badge.className = 'package-badge';
-        badge.innerText = pkg.tag;
-        
-        const title = document.createElement('h3');
-        title.innerText = pkg.name;
-        
-        const priceDiv = document.createElement('div');
-        priceDiv.className = 'price';
-        priceDiv.innerHTML = `${pkg.currency} ${pkg.price}<small>${pkg.period}</small><span class="currency-note">Tanzania Shillings</span>`;
-        
-        const featuresList = document.createElement('ul');
-        featuresList.className = 'features-list';
-        pkg.features.forEach(feat => {
-          const li = document.createElement('li');
-          li.innerText = feat;
-          featuresList.appendChild(li);
-        });
-        
-        const selectBtn = document.createElement('button');
-        selectBtn.className = 'select-btn';
-        selectBtn.innerText = 'Select this plan';
-        selectBtn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          // remove selected class from all cards, add to current
-          document.querySelectorAll('.package-card').forEach(c => c.classList.remove('selected'));
-          card.classList.add('selected');
-          // update dropdown value
-          if (selectEl) selectEl.value = pkg.id;
-          // smooth scroll to registration form
-          document.querySelector('.register').scrollIntoView({ behavior: 'smooth', block: 'start' });
-        });
-        
-        card.appendChild(badge);
-        card.appendChild(title);
-        card.appendChild(priceDiv);
-        card.appendChild(featuresList);
-        card.appendChild(selectBtn);
-        
-        // optional: click on card area also selects
-        card.addEventListener('click', (e) => {
-          if (e.target.tagName !== 'BUTTON') {
-            document.querySelectorAll('.package-card').forEach(c => c.classList.remove('selected'));
-            card.classList.add('selected');
-            if (selectEl) selectEl.value = pkg.id;
-          }
-        });
-        
-        container.appendChild(card);
-        
-        // --- Select options with TZS display ---
-        const option = document.createElement('option');
-        option.value = pkg.id;
-        option.textContent = `${pkg.name} - ${pkg.currency} ${pkg.price}${pkg.period}`;
-        selectEl.appendChild(option);
-        
-        // If first package is default selected
-        if (idx === 0) {
-          option.selected = true;
-          card.classList.add('selected');
-        }
-      });
-      
-      // ensure default selected card matches selected option
-      const defaultSelectedId = selectEl.value;
-      const defaultCard = Array.from(document.querySelectorAll('.package-card')).find(card => card.dataset.pkgId === defaultSelectedId);
-      if (defaultCard && !defaultCard.classList.contains('selected')) {
-        document.querySelectorAll('.package-card').forEach(c => c.classList.remove('selected'));
-        defaultCard.classList.add('selected');
+    const packageDetails = {
+      "1": {
+        badge: "Tyre Service",
+        features: ["Tyre service job cards", "Customer vehicle history", "Service checklist", "Basic service reports"]
+      },
+      "2": {
+        badge: "Car Wash Focus",
+        features: ["Unlimited car wash tickets", "Customer loyalty tracker", "Basic wash analytics", "Staff schedule support"]
+      },
+      "3": {
+        badge: "General Service",
+        features: ["General service workflow", "Mechanic assignment", "Inspection checklist", "Service payment tracking"]
+      },
+      "12": {
+        badge: "Tyre + Car Wash",
+        features: ["All Tyre Service features", "All Car Wash features", "Shared customer records", "Combined daily reports"]
+      },
+      "13": {
+        badge: "Tyre + General Service",
+        features: ["All Tyre Service features", "General repair workflow", "Parts and service tracking", "Technician task assignment"]
+      },
+      "23": {
+        badge: "Car Wash + General Service",
+        features: ["All Car Wash features", "General service workflow", "Customer vehicle history", "Combined service reports"]
+      },
+      "123": {
+        badge: "Full Garage Suite",
+        features: ["All service categories", "Garage repair workflow", "Parts ordering & inventory", "Advanced financial reports", "Multi-branch support"]
       }
-      
-      // sync dropdown change with card selection
-      selectEl.addEventListener('change', (e) => {
-        const selectedPkgId = e.target.value;
-        document.querySelectorAll('.package-card').forEach(card => {
-          if (card.dataset.pkgId === selectedPkgId) {
-            card.classList.add('selected');
-          } else {
-            card.classList.remove('selected');
-          }
-        });
+    };
+
+    let packages = [];
+    let visiblePackages = [];
+    let usingLivePackages = false;
+    let activeGroup = "single";
+
+    const cards = document.getElementById("packageCards");
+    const select = document.getElementById("packageSelect");
+    const result = document.getElementById("result");
+
+    function serviceCode(services = []) {
+      const map = { tire: "1", carWash: "2", general: "3" };
+      return services.map(service => map[service]).filter(Boolean).sort().join("") || "123";
+    }
+
+    function formatPrice(value) {
+      const amount = Number(value || 0);
+      return `TZS ${amount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    }
+
+    function periodLabel(period) {
+      const text = String(period || "MONTHLY").toLowerCase().replace("_", " ");
+      return text.charAt(0).toUpperCase() + text.slice(1);
+    }
+
+    function normalizePackage(plan) {
+      const services = Array.isArray(plan.services) ? plan.services : [];
+      const code = serviceCode(services);
+      const details = packageDetails[code] || packageDetails["123"];
+      return {
+        id: plan.id,
+        planCode: plan.plan_code || `VASMA-${code}-MONTHLY`,
+        group: services.length === 1 ? "single" : services.length === 2 ? "combo" : "full",
+        badge: details.badge,
+        name: displayPackageName(plan.plan_name || serviceNames(services)),
+        price: formatPrice(plan.price),
+        rawPrice: Number(plan.price || 0),
+        note: `${periodLabel(plan.billing_period)} • ${Number(plan.duration_days || 30)} days • ${Number(plan.branch_limit || 1)} branch(es)`,
+        services,
+        features: details.features
+      };
+    }
+
+    function displayPackageName(name) {
+      return String(name || "").replace(/\s+Only\b/gi, "").trim();
+    }
+
+    function serviceNames(services) {
+      return services.map(service => serviceLabels[service] || service).join(" + ") || "Full Service Package";
+    }
+
+    function packageLabel(pkg) {
+      return `${pkg.name} - ${pkg.price}`;
+    }
+
+    function sortPackages(plans) {
+      return plans.slice().sort((a, b) => {
+        const aCode = Number(serviceCode(a.services));
+        const bCode = Number(serviceCode(b.services));
+        return aCode - bCode;
       });
     }
-    
-    // Helper: generate unique business code (6–8 alphanumeric uppercase)
-    function generateBusinessCode(businessName, ownerName) {
-      const timestamp = Date.now().toString(36).slice(-4).toUpperCase();
-      const randomPart = Math.random().toString(36).substring(2, 5).toUpperCase();
-      const nameInitials = (businessName.replace(/[^a-zA-Z]/g, '').slice(0, 3) || 'VAS').toUpperCase();
-      return `${nameInitials}-${timestamp}${randomPart}`;
-    }
-    
-    // Store registration data (simulate local storage / in-memory)
-    function registerBusiness(formData) {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          const planId = formData.get('planId');
-          const businessName = formData.get('businessName').trim();
-          const ownerName = formData.get('ownerName').trim();
-          const mobile = formData.get('mobile').trim();
-          const location = formData.get('location').trim() || 'Not specified';
-          const pin = formData.get('pin');
-          
-          // validation on server-like side
-          if (!businessName || !ownerName || !mobile || !pin) {
-            resolve({ success: false, message: '❌ All fields are required (Business Name, Owner, Mobile, PIN).' });
-            return;
-          }
-          if (pin.length < 4) {
-            resolve({ success: false, message: '❌ PIN must be at least 4 characters.' });
-            return;
-          }
-          if (!mobile.match(/[0-9+()-\s]{8,}/)) {
-            resolve({ success: false, message: '⚠️ Please enter a valid mobile number (digits, +, spaces).' });
-            return;
-          }
-          
-          const selectedPackageObj = PACKAGES.find(p => p.id === planId);
-          if (!selectedPackageObj) {
-            resolve({ success: false, message: 'Invalid package selection.' });
-            return;
-          }
-          
-          // generate unique business code
-          const businessCode = generateBusinessCode(businessName, ownerName);
-          const registrationTimestamp = new Date().toLocaleString();
-          
-          // store in localStorage for demo "mock database"
-          const registrationRecord = {
-            businessCode,
-            businessName,
-            ownerName,
-            mobile,
-            location,
-            package: selectedPackageObj.name,
-            packageId: planId,
-            price: `${selectedPackageObj.currency} ${selectedPackageObj.price}`,
-            pinHash: `***${pin.slice(-2)}`,
-            registeredAt: registrationTimestamp
-          };
-          
-          let allRegistrations = [];
-          const stored = localStorage.getItem('vasma_registrations');
-          if (stored) {
-            try {
-              allRegistrations = JSON.parse(stored);
-            } catch(e) { allRegistrations = []; }
-          }
-          allRegistrations.push(registrationRecord);
-          localStorage.setItem('vasma_registrations', JSON.stringify(allRegistrations));
-          
-          resolve({
-            success: true,
-            businessCode,
-            packageName: selectedPackageObj.name,
-            businessName,
-            ownerName,
-            packagePrice: `${selectedPackageObj.currency} ${selectedPackageObj.price}`,
-            message: `✅ Registration successful! Your business is now active under ${selectedPackageObj.name}.`
-          });
-        }, 600);
+
+    function renderPackages() {
+      visiblePackages = packages.filter(pkg => pkg.group === activeGroup);
+      cards.innerHTML = visiblePackages.map((pkg, index) => `
+        <article class="package-card ${index === 0 ? "selected" : ""}" data-package="${pkg.id}">
+          <span class="badge">${pkg.badge}</span>
+          <h3>${pkg.name}</h3>
+          <div class="price">${pkg.price}${pkg.rawPrice ? "<small>/ month</small>" : ""}</div>
+          <small class="tax-note">${pkg.note}</small>
+          <ul class="features">
+            ${pkg.features.map(feature => `<li>${feature}</li>`).join("")}
+          </ul>
+          <button class="select-btn" type="button">Select this plan</button>
+        </article>
+      `).join("");
+
+      document.querySelectorAll(".package-card").forEach(card => {
+        card.addEventListener("click", () => choosePackage(card.dataset.package, true));
       });
+
+      if (visiblePackages[0]) choosePackage(visiblePackages[0].id);
     }
-    
-    // display result with business code and instructions
-    function showResult(resultData) {
-      const resultDiv = document.getElementById('result');
-      if (!resultDiv) return;
-      resultDiv.hidden = false;
-      if (resultData.success) {
-        resultDiv.innerHTML = `
-          <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-            <strong style="font-size: 1.2rem;">🎉 Welcome, ${escapeHtml(resultData.businessName)}!</strong>
-            <div style="background: #d9f0e8; padding: 0.75rem 1rem; border-radius: 1rem;">
-              <span style="font-weight:800">BUSINESS CODE:</span> 
-              <span style="font-family: monospace; font-size:1.3rem; letter-spacing:1px; background:white; padding:0.2rem 0.8rem; border-radius:40px;">${escapeHtml(resultData.businessCode)}</span>
-            </div>
-            <p><strong>📦 Package:</strong> ${escapeHtml(resultData.packageName)} (${escapeHtml(resultData.packagePrice)}/month)<br>
-            <strong>👤 Owner:</strong> ${escapeHtml(resultData.ownerName)}<br>
-            🔐 Use your Business Code + PIN to login into the VASMA dashboard.<br>
-            <em>An email/SMS with credentials has been simulated. You can now access the system using <strong>${escapeHtml(resultData.businessCode)}</strong> and your chosen PIN.</em>
-            </p>
-            <button id="resetRegisterBtn" style="background: none; border:1px solid #1f6e8c; padding:0.5rem 1rem; border-radius:3rem; width:fit-content; margin-top:0.5rem; cursor:pointer;">➕ Register another business</button>
-          </div>
-        `;
-        const resetBtn = document.getElementById('resetRegisterBtn');
-        if (resetBtn) {
-          resetBtn.addEventListener('click', () => {
-            document.getElementById('registerForm').reset();
-            resultDiv.hidden = true;
-            const defaultPkg = PACKAGES[0].id;
-            const selectEl = document.getElementById('packageSelect');
-            if (selectEl) selectEl.value = defaultPkg;
-            const defaultCard = Array.from(document.querySelectorAll('.package-card')).find(card => card.dataset.pkgId === defaultPkg);
-            if (defaultCard) {
-              document.querySelectorAll('.package-card').forEach(c => c.classList.remove('selected'));
-              defaultCard.classList.add('selected');
-            }
-            document.querySelector('.packages').scrollIntoView({ behavior: 'smooth' });
-          });
-        }
-      } else {
-        resultDiv.innerHTML = `<span style="color:#b13e3e;">⚠️ ${escapeHtml(resultData.message)}</span><br><small>Please check the fields and try again.</small>`;
+
+    function choosePackage(id, scrollToForm = false) {
+      document.querySelectorAll(".package-card").forEach(card => {
+        card.classList.toggle("selected", card.dataset.package === id);
+      });
+      const pkg = packages.find(item => item.id === id);
+      select.value = id;
+      document.getElementById("packageDisplay").value = pkg ? packageLabel(pkg) : "";
+      if (scrollToForm) {
+        document.querySelector(".register").scrollIntoView({ behavior: "smooth", block: "start" });
       }
     }
-    
-    function escapeHtml(str) {
-      if (!str) return '';
-      return str.replace(/[&<>]/g, function(m) {
-        if (m === '&') return '&amp;';
-        if (m === '<') return '&lt;';
-        if (m === '>') return '&gt;';
-        return m;
-      }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
-        return c;
+
+    function setPackageGroup(group) {
+      activeGroup = group;
+      document.querySelectorAll(".package-tab").forEach(tab => {
+        tab.classList.toggle("active", tab.dataset.group === group);
       });
-    }
-    
-    function initFormHandler() {
-      const form = document.getElementById('registerForm');
-      if (!form) return;
-      form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const resultDiv = document.getElementById('result');
-        if (resultDiv) resultDiv.hidden = true;
-        
-        const formData = new FormData(form);
-        if (!formData.get('planId')) {
-          if (resultDiv) {
-            resultDiv.hidden = false;
-            resultDiv.innerHTML = '❌ Please select a valid package.';
-          }
-          return;
-        }
-        
-        const submitBtn = form.querySelector('button[type="submit"]');
-        const originalText = submitBtn.innerText;
-        submitBtn.innerText = '⏳ Registering...';
-        submitBtn.disabled = true;
-        
-        const response = await registerBusiness(formData);
-        showResult(response);
-        
-        submitBtn.innerText = originalText;
-        submitBtn.disabled = false;
-        
-        if (response.success) {
-          form.querySelector('input[name="pin"]').value = '';
-        }
-      });
-    }
-    
-    function syncInitialSelection() {
-      const selectEl = document.getElementById('packageSelect');
-      if (selectEl && selectEl.value) {
-        const selectedId = selectEl.value;
-        document.querySelectorAll('.package-card').forEach(card => {
-          if (card.dataset.pkgId === selectedId) {
-            card.classList.add('selected');
-          } else {
-            card.classList.remove('selected');
-          }
-        });
-      }
-    }
-    
-    document.addEventListener('DOMContentLoaded', () => {
       renderPackages();
-      initFormHandler();
-      syncInitialSelection();
-      const titleEl = document.getElementById('landingTitle');
-      if (titleEl) titleEl.innerText = 'VASMA System';
-      const subtitle = document.getElementById('landingSubtitle');
-      if (subtitle) subtitle.innerText = 'Packages built for car wash, service stations & full garages';
+    }
+
+    async function apiRegister(payload) {
+      const response = await fetch("/api/public/register-business", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const data = await response.json();
+      if (!response.ok || data.success === false) {
+        throw new Error(data.error || "Could not register business");
+      }
+      return data;
+    }
+
+    document.getElementById("registerForm").addEventListener("submit", async event => {
+      event.preventDefault();
+      const submit = event.currentTarget.querySelector(".submit-btn");
+      submit.disabled = true;
+      submit.textContent = "Registering...";
+      const data = Object.fromEntries(new FormData(event.currentTarget).entries());
+      const pkg = packages.find(item => item.id === data.planId) || packages[0];
+      try {
+        const response = await apiRegister(data);
+
+        result.hidden = false;
+        result.innerHTML = `
+          Registration complete.<br>
+          Business Code: <strong>${response.businessCode}</strong><br>
+          Package: <strong>${response.packageName || pkg.name}</strong><br>
+          Status: <strong>${response.status || "PENDING"}</strong><br>
+          Use your Business Code and PIN on the login page after Super Admin activation.
+        `;
+        event.currentTarget.reset();
+        choosePackage(pkg.id);
+        result.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      } catch (error) {
+        result.hidden = false;
+        result.innerHTML = `Registration failed.<br><strong>${error.message}</strong>`;
+      } finally {
+        submit.disabled = false;
+        submit.textContent = "🚀 Register and Get Business Code";
+      }
     });
+
+    document.querySelectorAll(".package-tab").forEach(tab => {
+      tab.addEventListener("click", () => setPackageGroup(tab.dataset.group));
+    });
+
+    async function loadPackages() {
+      try {
+        const response = await fetch("/api/public/packages", { headers: { Accept: "application/json" } });
+        const data = await response.json();
+        if (!response.ok || data.success === false || !Array.isArray(data.packages) || !data.packages.length) {
+          throw new Error("Package list unavailable");
+        }
+        usingLivePackages = true;
+        packages = sortPackages(data.packages).map(normalizePackage);
+      } catch (_error) {
+        usingLivePackages = false;
+        packages = sortPackages(fallbackPackages).map(normalizePackage);
+      }
+      renderPackages();
+    }
+
+    loadPackages();
   </script>
 </body>
 </html>
